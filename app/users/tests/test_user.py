@@ -20,6 +20,8 @@ def pytest_db(f):
                 db.close()
         app.dependency_overrides[get_db] = override_get_db
         f(*args, **kwargs)
+
+        app.dependency_overrides[get_db] = get_db
     return func
 
 
@@ -101,3 +103,10 @@ def test_delete_user():
         "name": "fooo2",
         "is_active": True,
     }
+
+
+def test_show_user():
+    response = client.get(
+        "/users/"
+    )
+    assert response.status_code == 200
