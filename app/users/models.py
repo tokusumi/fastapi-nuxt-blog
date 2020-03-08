@@ -1,5 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-
+from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import relationship
 from settings.database import Base
 
 
@@ -12,3 +12,4 @@ class User(Base):
     hashed_password = Column(String)
     icon = Column(String)
     is_active = Column(Boolean, default=True)
+    post = relationship("Post")

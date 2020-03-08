@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 
 from . import models, schemas
 from .crud import (
-    get_user_by_id_query,
     get_user_by_email_query,
     get_user_by_password_query,
     get_users_query,
@@ -28,7 +27,7 @@ def get_db():
         db.close()
 
 
-@app.get("/users/", response_model=List[schemas.User])
+@app.get("/users/", response_model=List[schemas.User], tags=['user'])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     db_user = get_users_query(db, skip=skip, limit=limit)
     if len(db_user) == 0:
@@ -36,7 +35,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users/", response_model=schemas.User, tags=['user'])
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = get_user_by_email_query(db, email=user.email)
     if db_user:
@@ -44,7 +43,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return create_user_query(db=db, user=user)
 
 
-@app.delete("/users/", response_model=schemas.User)
+@app.delete("/users/", response_model=schemas.User, tags=['user'])
 def delete_user(user: schemas.UserDelete, db: Session = Depends(get_db)):
     db_user = get_user_by_password_query(db, email=user.email, password=user.password)
     if not db_user:

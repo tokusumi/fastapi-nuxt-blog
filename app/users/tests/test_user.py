@@ -10,6 +10,7 @@ def pytest_db(f):
     if this decorates testing function,
     testing api connects temporary database,
     which is isolated all others testing and existing database.
+    NOTE: must define SessionLocal fixture in conftest.py
     """
     def func(SessionLocal, *args, **kwargs):
         def override_get_db():
@@ -103,10 +104,3 @@ def test_delete_user():
         "name": "fooo2",
         "is_active": True,
     }
-
-
-def test_show_user():
-    response = client.get(
-        "/users/"
-    )
-    assert response.status_code == 200
