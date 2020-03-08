@@ -11,20 +11,11 @@ from .crud import (
     create_user_query,
     delete_user_query
 )
-from settings.database import SessionLocal, engine
+from settings.database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
 
 app = APIRouter()
-
-
-# Dependency
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 
 @app.get("/users/", response_model=List[schemas.User], tags=['user'])
