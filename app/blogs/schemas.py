@@ -1,5 +1,6 @@
 from typing import Optional, List
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class Success(BaseModel):
@@ -95,3 +96,31 @@ class Post(BasePost):
 
     def tags(self):
         return [tag.name for tag in self.tags]
+
+
+class BaseComment(BaseModel):
+    pass
+
+
+class CreateComment(BaseModel):
+    post_id: int
+    author_id: Optional[int] = None
+    body: str
+
+
+class DeleteComment(BaseModel):
+    id: int
+
+
+class Comment(BaseComment):
+    id: int
+    post_id: int
+    author: str
+    body: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+    def author(self):
+        return self.author.name

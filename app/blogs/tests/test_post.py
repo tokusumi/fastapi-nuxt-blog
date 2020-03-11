@@ -186,3 +186,104 @@ def test_delete_post():
 
     response = client.get("/post/")
     assert response.status_code == 400
+
+
+@pytest_db
+def test_create_comment():
+    """
+    create comment
+    """
+    user = client.post("/users/", json={"email": "foo", "name": "fooo", "password": "fo"})
+    assert user.status_code == 200
+    user_id = user.json()['id']
+
+    response = client.post(
+        "/post/",
+        json={
+            'title': '1', 'body': '1',
+            'author_id': user_id,
+        }
+    )
+    assert response.status_code == 200
+
+    post_id = response.json()['id']
+    response = client.post(
+        "/comment/",
+        json={
+            'author_id': user_id,
+            'body': 'hogefuga',
+            'post_id': post_id
+        }
+    )
+    assert response.status_code == 200
+
+
+@pytest_db
+def test_get_comment():
+    """
+    get comment
+    """
+    user = client.post("/users/", json={"email": "foo", "name": "fooo", "password": "fo"})
+    assert user.status_code == 200
+    user_id = user.json()['id']
+
+    response = client.post(
+        "/post/",
+        json={
+            'title': '1', 'body': '1',
+            'author_id': user_id,
+        }
+    )
+    assert response.status_code == 200
+
+    post_id = response.json()['id']
+    response = client.post(
+        "/comment/",
+        json={
+            'author_id': user_id,
+            'body': 'hogefuga',
+            'post_id': post_id
+        }
+    )
+    assert response.status_code == 200
+
+    response = client.get(f"/comment/{post_id}")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
+
+@pytest_db
+def test_delete_comment():
+    """
+    delete comment
+    """
+    user = client.post("/users/", json={"email": "foo", "name": "fooo", "password": "fo"})
+    assert user.status_code == 200
+    user_id = user.json()['id']
+
+    response = client.post(
+        "/post/",
+        json={
+            'title': '1', 'body': '1',
+            'author_id': user_id,
+        }
+    )
+    assert response.status_code == 200
+
+    post_id = response.json()['id']
+    response = client.post(
+        "/comment/",
+        json={
+            'author_id': user_id,
+            'body': 'hogefuga',
+            'post_id': post_id
+        }
+    )
+    assert response.status_code == 200
+    comment_id = response.json()['id']
+
+    response = client.delete("/comment/", json={'id': comment_id})
+    assert response.status_code == 200
+
+    response = client.get(f"/comment/{post_id}")
+    assert response.status_code == 400

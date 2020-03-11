@@ -124,3 +124,30 @@ def delete_post(db: Session, post_id: int):
     post = db.query(models.Post).filter(models.Post.id == post_id)
     post.delete()
     db.commit()
+
+
+def get_comment(db: Session, comment_id: int):
+    """get comment by id"""
+    return db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+
+
+def get_comment_query(
+        db: Session,
+        post_id: Optional[int] = None,
+        skip: int = 0,
+        limit: int = 100):
+    """get comments by post id"""
+    db = db.query(models.Comment).filter(models.Comment.post_id == post_id)
+    return db.offset(skip).limit(limit).all()
+
+
+def create_comment(db: Session, comment: schemas.CreateComment):
+    instance = models.Comment(**comment.dict())
+    instance = _create(db, instance)
+    return instance
+
+
+def delete_comment(db: Session, comment_id: int):
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id)
+    comment.delete()
+    db.commit()
