@@ -1,7 +1,7 @@
-from typing import List
-from fastapi import Depends, APIRouter, HTTPException
+from typing import List, Optional
+from fastapi import Depends, APIRouter, HTTPException, Query
 from sqlalchemy.orm import Session
-from . import models, schemas, crud
+from . import models, schemas, crud, utils
 from settings.database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -9,49 +9,39 @@ models.Base.metadata.create_all(bind=engine)
 app = APIRouter()
 
 
-@app.get("/category/", response_model=List[schemas.Category], tags=['post_property'])
-def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    query = crud.get_category_query(db, skip=skip, limit=limit)
+@app.get("/post/", response_model=List[schemas.Post], tags=['post'])
+def get_post(
+        author: Optional[str] = None,
+        category: Optional[str] = None,
+        series: Optional[str] = None,
+        tags: Optional[List[str]] = Query(None),
+        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    filtering = schemas.FilterPost(author=author, category=category, series=series, tags=tags)
+    filtering_dict = utils.FilterIDPost(db, filtering).to_items() if filtering else {}
+    query = crud.get_post_query(db, skip=skip, limit=limit, **filtering_dict)
     if len(query) == 0:
-        raise HTTPException(status_code=400, detail="Category does not exist")
+        raise HTTPException(status_code=400, detail="Post does not exist")
     return query
 
 
-@app.post("/category/", response_model=schemas.Category, tags=['post_property'])
-def create_category(category: schemas.CreateCategory, db: Session = Depends(get_db)):
-    instance = crud.get_category(db, category.name)
-    if instance:
-        raise HTTPException(status_code=400, detail="Category already registered")
-    return crud.create_category(db, category)
-
-
-@app.get("/series/", response_model=List[schemas.Series], tags=['post_property'])
-def read_series(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    query = crud.get_series_query(db, skip=skip, limit=limit)
-    if len(query) == 0:
-        raise HTTPException(status_code=400, detail="Series does not exist")
+@app.get("/post/{post_id}/", response_model=schemas.Post, tags=['post'])
+def get_post_by_id(post_id: int, db: Session = Depends(get_db)):
+    query = crud.get_post(db, post_id)
+    if not query:
+        raise HTTPException(status_code=400, detail="Post does not exist")
     return query
 
 
-@app.post("/series/", response_model=schemas.Series, tags=['post_property'])
-def create_series(series: schemas.CreateSeries, db: Session = Depends(get_db)):
-    instance = crud.get_series(db, series.name)
-    if instance:
-        raise HTTPException(status_code=400, detail="Series already registered")
-    return crud.create_series(db, series)
+@app.post("/post/", response_model=schemas.Post, tags=['post'])
+def create_post(post: schemas.CreatePostReq, db: Session = Depends(get_db)):
+    create_id_post_dict = utils.CreateIDPost(db, post).to_items()
+    _post = schemas.CreatePost(**create_id_post_dict)
+    return crud.create_post(db, _post)
 
 
-@app.get("/tag/", response_model=List[schemas.Tag], tags=['post_property'])
-def read_tag(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    query = crud.get_tag_query(db, skip=skip, limit=limit)
-    if len(query) == 0:
-        raise HTTPException(status_code=400, detail="Tag does not exist")
-    return query
-
-
-@app.post("/tag/", response_model=schemas.Tag, tags=['post_property'])
-def create_tag(tag: schemas.CreateTag, db: Session = Depends(get_db)):
-    instance = crud.get_tag(db, tag.name)
-    if instance:
-        raise HTTPException(status_code=400, detail="Tag already registered")
-    return crud.create_tag(db, tag)
+@app.delete("/post/", response_model=schemas.Success, tags=['post'])
+def delete_post(post: schemas.DeletePost, db: Session = Depends(get_db)):
+    db_post = crud.get_post(db, post.id)
+    if not db_post:
+        raise HTTPException(status_code=400, detail="Does not exist")
+    crud.delete_post(db, post.id)

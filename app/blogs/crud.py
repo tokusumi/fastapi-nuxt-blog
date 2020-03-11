@@ -1,3 +1,4 @@
+from typing import Optional, List
 from sqlalchemy.orm import Session
 from . import models, schemas
 
@@ -51,7 +52,75 @@ def get_tag(db: Session, name: str):
     return db.query(models.Tag).filter(models.Tag.name == name).first()
 
 
+def get_tag_by_id(db: Session, _id: int):
+    """get tag by id"""
+    return db.query(models.Tag).filter(models.Tag.id == _id).first()
+
+
 def create_tag(db: Session, args: schemas.CreateTag):
     """create tag"""
     instance = models.Tag(**args.dict())
     return _create(db, instance)
+
+
+def get_post(db: Session, post_id: int):
+    """get post by id"""
+    return db.query(models.Post).filter(models.Post.id == post_id).first()
+
+
+def filter_post_by_category(db: Session, category_id: int):
+    """get post list by category"""
+    return db.filter(models.Post.category_id == category_id)
+
+
+def filter_post_by_series(db: Session, series_id: int):
+    """get post list by series"""
+    return db.filter(models.Post.series_id == series_id)
+
+
+def filter_post_by_tag(db: Session, tag_id: int):
+    """get post list by tag"""
+    return db.filter(models.Post.tag.any(models.Tag.id == tag_id))
+
+
+def filter_post_by_tags(db: Session, tag_ids: List[int]):
+    """get post list by tag"""
+    for tag_id in tag_ids:
+        db = db.filter(models.Post.tag.any(models.Tag.id == tag_id))
+    return db
+
+
+def get_post_query(
+        db: Session,
+        category_id: Optional[int] = None,
+        series_id: Optional[int] = None,
+        tag_ids: Optional[List[int]] = None,
+        skip: int = 0,
+        limit: int = 100):
+    """get post list
+    filter_by:
+    - category id
+    - series id
+    - tag id
+    """
+    db = db.query(models.Post)
+    db = filter_post_by_category(db, category_id) if category_id is not None else db
+    db = filter_post_by_series(db, series_id) if series_id is not None else db
+    db = filter_post_by_tags(db, tag_ids) if tag_ids is not None else db
+    return db.offset(skip).limit(limit).all()
+
+
+def create_post(db: Session, post: schemas.CreatePost):
+    post_dict = post.dict()
+    if post_dict.pop('tag_ids'):
+        post_dict['tag'] = [get_tag_by_id(db, ids) for ids in post.tag_ids]
+
+    instance = models.Post(**post_dict)
+    instance = _create(db, instance)
+    return instance
+
+
+def delete_post(db: Session, post_id: int):
+    post = db.query(models.Post).filter(models.Post.id == post_id)
+    post.delete()
+    db.commit()

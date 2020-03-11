@@ -10,6 +10,9 @@ class Category(Base):
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
 
+    def __repr__(self):
+        return self.name
+
 
 class Tag(Base):
     __tablename__ = 'tag'
@@ -17,6 +20,9 @@ class Tag(Base):
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
     post = relationship("Post", secondary=lambda: post__tag, backref="tags")
+
+    def __repr__(self):
+        return self.name
 
 
 post__tag = Table(
@@ -32,6 +38,9 @@ class Series(Base):
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
 
+    def __repr__(self):
+        return self.name
+
 
 class Post(Base):
     __tablename__ = 'post'
@@ -39,13 +48,19 @@ class Post(Base):
     title = Column(String)
     body = Column(Text)
     author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    author = relationship("User", backref="posts")
     series_id = Column(Integer, ForeignKey('series.id'), nullable=True)
+    series = relationship("Series", backref="posts")
     category_id = Column(Integer, ForeignKey('category.id'), nullable=True)
+    category = relationship("Category", backref="posts")
     tag = relationship("Tag", secondary=lambda: post__tag, backref="posts")
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
     # updated_at = Column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     is_public = Column(Boolean, default=False)
     notification = Column(Boolean, default=False)
+
+    def __repr__(self):
+        return self.title
 
 
 class Comment(Base):

@@ -13,3 +13,6 @@ class User(Base):
     icon = Column(String)
     is_active = Column(Boolean, default=True)
     post = relationship("Post")
+
+    def __str__(self):
+        return self.email

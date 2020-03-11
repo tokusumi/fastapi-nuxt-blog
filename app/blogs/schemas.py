@@ -1,4 +1,9 @@
+from typing import Optional, List
 from pydantic import BaseModel
+
+
+class Success(BaseModel):
+    success: bool = True
 
 
 class CreateCategory(BaseModel):
@@ -35,3 +40,58 @@ class Tag(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class BasePost(BaseModel):
+    title: str
+    body: str
+    is_public: bool = False
+    notification: bool = False
+
+
+class CreatePost(BasePost):
+    author_id: int
+    category_id: Optional[int] = None
+    series_id: Optional[int] = None
+    tag_ids: Optional[List[int]] = None
+
+
+class CreatePostReq(BasePost):
+    author_id: int
+    category: Optional[str] = None
+    series: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+
+class FilterPost(BaseModel):
+    author: Optional[str] = None
+    category: Optional[str] = None
+    series: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+
+class DeletePost(BaseModel):
+    id: int
+
+
+class Post(BasePost):
+    id: int
+    author: str
+    category: Optional[str] = None
+    series: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+    class Config:
+        orm_mode = True
+
+    def author(self):
+        return self.author.name
+
+    def category(self):
+        return self.category.name
+
+    def series(self):
+        return self.series.name
+
+    def tags(self):
+        return [tag.name for tag in self.tags]
