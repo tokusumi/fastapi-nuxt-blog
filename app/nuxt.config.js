@@ -43,9 +43,25 @@ export default {
     */
     modules: [
         '@nuxtjs/axios',
+        '@nuxtjs/auth',
     ],
     axios: {
         // proxyHeaders: false
+    },
+    auth: {
+        strategies: {
+            local: {
+                endpoints: {
+                    login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+                    logout: { url: '/auth/logout', method: 'post' },
+                    user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+                }
+            },
+            google: { /* ... */ },
+        }
+    },
+    router: {
+        middleware: ['auth']
     },
     /*
     ** vuetify module configuration
