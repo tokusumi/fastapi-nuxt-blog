@@ -25,7 +25,7 @@
         </v-btn>
 
         <v-btn icon to="/dashboard">
-          <v-icon>mdi-pencil</v-icon>
+          <v-icon>mdi-dresser</v-icon>
         </v-btn>
 
         <v-btn icon>
@@ -61,14 +61,19 @@ export default {
           to: "/"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-newspaper-variant",
           title: "List",
           to: "/list"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-pencil",
           title: "Post",
           to: "/post"
+        },
+        {
+          icon: "mdi-dresser",
+          title: "dashboard",
+          to: "/dashboard"
         }
       ]
     };
