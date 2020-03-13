@@ -39,12 +39,12 @@ def create_post(post: schemas.CreatePostReq, db: Session = Depends(get_db)):
     return crud.create_post(db, _post)
 
 
-@app.delete("/post/", response_model=schemas.Success, tags=['post'])
-def delete_post(post: schemas.DeletePost, db: Session = Depends(get_db)):
-    db_post = crud.get_post(db, post.id)
+@app.delete("/post/{post_id}/", response_model=schemas.Success, tags=['post'])
+def delete_post(post_id: int, db: Session = Depends(get_db)):
+    db_post = crud.get_post(db, post_id)
     if not db_post:
         raise HTTPException(status_code=400, detail="Does not exist")
-    crud.delete_post(db, post.id)
+    crud.delete_post(db, post_id)
 
 
 @app.get("/comment/{post_id}/", response_model=List[schemas.Comment], tags=['comment'])
@@ -60,9 +60,9 @@ def create_comment(comment: schemas.CreateComment, db: Session = Depends(get_db)
     return crud.create_comment(db, comment)
 
 
-@app.delete("/comment/", response_model=schemas.Success, tags=['comment'])
-def delete_comment(comment: schemas.DeleteComment, db: Session = Depends(get_db)):
-    db_comment = crud.get_comment(db, comment.id)
+@app.delete("/comment/{comment_id}/", response_model=schemas.Success, tags=['comment'])
+def delete_comment(comment_id: int, db: Session = Depends(get_db)):
+    db_comment = crud.get_comment(db, comment_id)
     if not db_comment:
         raise HTTPException(status_code=400, detail="Does not exist")
-    crud.delete_comment(db, comment.id)
+    crud.delete_comment(db, comment_id)

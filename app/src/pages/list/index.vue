@@ -31,7 +31,10 @@
 <script>
 export default {
   async asyncData({ app }) {
-    const data = await app.$axios.$get("http://fastapi:80/post/");
+    let url = process.client
+      ? "http://localhost:80/post/"
+      : "http://fastapi:80/post/";
+    const data = await app.$axios.$get(url);
     return {
       cards: data,
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"

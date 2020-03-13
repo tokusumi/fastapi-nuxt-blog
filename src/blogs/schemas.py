@@ -71,10 +71,6 @@ class FilterPost(BaseModel):
     tags: Optional[List[str]] = None
 
 
-class DeletePost(BaseModel):
-    id: int
-
-
 class Post(BasePost):
     id: int
     author: str
@@ -106,10 +102,6 @@ class CreateComment(BaseModel):
     post_id: int
     author_id: Optional[int] = None
     body: str
-
-
-class DeleteComment(BaseModel):
-    id: int
 
 
 class Comment(BaseComment):

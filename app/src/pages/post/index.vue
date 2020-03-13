@@ -74,9 +74,9 @@ export default {
     },
     publishMessage() {
       if (this.publish_switch === true) {
-        return "publish: all user will be able to read this.";
+        return "public: all user will be able to read this.";
       } else {
-        return "public: you can only read this.";
+        return "private: you can only read this.";
       }
     },
     async submit() {

@@ -181,7 +181,7 @@ def test_delete_post():
     )
     assert response.status_code == 200
 
-    response = client.delete("/post/", json={"id": 1})
+    response = client.delete(f"/post/{1}/")
     assert response.status_code == 200
 
     response = client.get("/post/")
@@ -282,7 +282,7 @@ def test_delete_comment():
     assert response.status_code == 200
     comment_id = response.json()['id']
 
-    response = client.delete("/comment/", json={'id': comment_id})
+    response = client.delete(f"/comment/{comment_id}/")
     assert response.status_code == 200
 
     response = client.get(f"/comment/{post_id}")

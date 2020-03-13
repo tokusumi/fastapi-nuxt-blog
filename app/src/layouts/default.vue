@@ -13,7 +13,7 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-toolbar dense>
+      <v-app-bar dense fixed>
         <v-app-bar-nav-icon @click.stop="leftDrawer = !leftDrawer"></v-app-bar-nav-icon>
 
         <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -21,17 +21,17 @@
         <v-spacer></v-spacer>
 
         <v-btn icon to="/post/">
-          <v-icon>mdi-plus</v-icon>
+          <v-icon>mdi-pencil</v-icon>
         </v-btn>
 
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
+        <v-btn icon to="/dashboard">
+          <v-icon>mdi-pencil</v-icon>
         </v-btn>
 
         <v-btn icon>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
-      </v-toolbar>
+      </v-app-bar>
     </v-card>
 
     <v-content>
