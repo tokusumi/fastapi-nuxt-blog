@@ -1,0 +1,77 @@
+<template>
+  <v-app white>
+    <v-card color="grey lighten-4" flat height="200px" tile>
+      <v-navigation-drawer v-model="leftDrawer" :left="left" temporary fixed>
+        <v-list>
+          <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+      <v-toolbar dense>
+        <v-app-bar-nav-icon @click.stop="leftDrawer = !leftDrawer"></v-app-bar-nav-icon>
+
+        <v-toolbar-title>{{ title }}</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn icon to="/post/">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </v-card>
+
+    <v-content>
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
+
+    <v-footer :fixed="fixed" app>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
+  </v-app>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      clipped: false,
+      fixed: false,
+      title: "Blog",
+      left: true,
+      leftDrawer: false,
+      items: [
+        {
+          icon: "mdi-apps",
+          title: "Home",
+          to: "/"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "List",
+          to: "/list"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "Post",
+          to: "/post"
+        }
+      ]
+    };
+  }
+};
+</script>

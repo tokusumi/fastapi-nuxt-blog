@@ -1,15 +1,25 @@
-  
 version: '3'
-
 services:
-  fastapi:
+
+  frontend:
     build: ./app
+    command: yarn dev
+    volumes:
+        - ./app:/app
+    working_dir: /app
+    ports:
+        - "3000:3000"
+    environment:
+        HOST: 0.0.0.0
+
+  fastapi:
+    build: ./src
     # image: tiangolo/uvicorn-gunicorn-fastapi:python3.6
     container_name: fastapi
     command: /start-reload.sh
     ports:
       - 80:80
     volumes:
-      - ./app:/app
+      - ./src:/app
     environment:
       - DATABASE_URL=sqlite:///./test.db

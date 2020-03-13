@@ -1,0 +1,21 @@
+{
+    "name": "blog",
+    "version": "1.0.0",
+    "description": "My splendiferous Nuxt.js project",
+    "author": "",
+    "private": true,
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "start": "nuxt start",
+        "generate": "nuxt generate"
+    },
+    "dependencies": {
+        "@nuxtjs/axios": "^5.9.5",
+        "nuxt": "^2.0.0",
+        "vee-validate": "^3.2.5"
+    },
+    "devDependencies": {
+        "@nuxtjs/vuetify": "^1.0.0"
+    }
+}
