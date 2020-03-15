@@ -57,15 +57,14 @@
 <script>
 export default {
   async asyncData({ app }) {
-    let base_url = process.client ? "http://localhost:80" : "http://fastapi:80";
-    const data = await app.$axios.$get(`${base_url}/post/`);
-    let categories = await app.$axios.$get(`${base_url}/category/`).catch(e => {
+    const data = await app.$axios.$get("/post/");
+    let categories = await app.$axios.$get("/category/").catch(e => {
       return [];
     });
-    const serieses = await app.$axios.$get(`${base_url}/series/`).catch(e => {
+    const serieses = await app.$axios.$get("/series/").catch(e => {
       return [];
     });
-    const tags = await app.$axios.$get(`${base_url}/tag/`).catch(e => {
+    const tags = await app.$axios.$get("/tag/").catch(e => {
       return [];
     });
 
@@ -176,7 +175,7 @@ export default {
     },
     async sendGetPost() {
       await this.$axios
-        .$get("http://0.0.0.0:80/post/")
+        .$get("/post/")
         .then(res => {
           this.posts = res;
         })
@@ -185,7 +184,7 @@ export default {
     async sendDeletePost(post_id) {
       console.log(post_id);
       await this.$axios
-        .$delete(`http://0.0.0.0:80/post/${post_id}/`)
+        .$delete(`/post/${post_id}/`)
         .then(res => {})
         .catch(e => {});
     }

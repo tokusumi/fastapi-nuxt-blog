@@ -5,7 +5,7 @@
 
       <v-form>
         <v-container>
-          <v-text-field v-model="login.email" label="E-mail"></v-text-field>
+          <v-text-field v-model="login.username" label="E-mail"></v-text-field>
           <v-text-field
             v-model="login.password"
             :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -28,24 +28,37 @@
 
 <script>
 export default {
+  middleware({ store, redirect }) {
+    if (store.$auth.loggedIn) {
+      redirect("/");
+    }
+  },
   data() {
     return {
       show: false,
       login: {
-        email: "",
+        username: "",
         password: ""
       }
     };
   },
   methods: {
-    async userLogin() {
+    userLogin() {
       try {
-        let response = await this.$auth.loginWith("local", {
-          data: this.login
-        });
-        console.log(response);
+        this.$auth
+          .loginWith("local", { data: this.login })
+          .then(res => {
+            console.log("success");
+            console.log(this.$auth.loggedIn);
+            console.log(this.$auth.user);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       } catch (err) {
-        console.log(err);
+        err => {
+          console.log(err);
+        };
       }
     }
   }

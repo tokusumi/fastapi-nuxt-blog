@@ -26,17 +26,13 @@
 <script>
 export default {
   async asyncData({ app, query, error }) {
-    let categories = await app.$axios
-      .$get("http://fastapi:80/category/")
-      .catch(e => {
-        return [];
-      });
-    const serieses = await app.$axios
-      .$get("http://fastapi:80/series/")
-      .catch(e => {
-        return [];
-      });
-    const tags = await app.$axios.$get("http://fastapi:80/tag/").catch(e => {
+    let categories = await app.$axios.$get("/category/").catch(e => {
+      return [];
+    });
+    const serieses = await app.$axios.$get("/series/").catch(e => {
+      return [];
+    });
+    const tags = await app.$axios.$get("/tag/").catch(e => {
       return [];
     });
 
@@ -81,7 +77,7 @@ export default {
     },
     async submit() {
       await this.$axios
-        .$post("http://0.0.0.0:80/post/", {
+        .$post("/post/", {
           title: this.title,
           body: this.body,
           is_public: this.publish_switch,

@@ -46,18 +46,23 @@ export default {
         '@nuxtjs/auth',
     ],
     axios: {
+        baseURL: 'http://fastapi:80/',
+        browserBaseURL: 'http://localhost:80/',
+        // credentials: true
         // proxyHeaders: false
     },
     auth: {
+        redirect: {
+            home: '/',
+        },
         strategies: {
             local: {
                 endpoints: {
-                    login: { url: '/auth/login', method: 'post', propertyName: 'token' },
-                    logout: { url: '/auth/logout', method: 'post' },
-                    user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+                    login: { url: '/auth/token', method: 'post', propertyName: 'token' },
+                    user: { url: '/users/me/', method: 'get', propertyName: false },
+                    logout: false
                 }
             },
-            google: { /* ... */ },
         }
     },
     router: {

@@ -58,16 +58,12 @@
 <script>
 export default {
   async asyncData({ app, query, error }) {
-    const post = await app.$axios
-      .$get(`http://fastapi:80/post/${query.id}/`)
-      .catch(e => {
-        return [];
-      });
-    const comments = await app.$axios
-      .$get(`http://fastapi:80/comment/${query.id}/`)
-      .catch(e => {
-        return [];
-      });
+    const post = await app.$axios.$get(`/post/${query.id}/`).catch(e => {
+      return [];
+    });
+    const comments = await app.$axios.$get(`/comment/${query.id}/`).catch(e => {
+      return [];
+    });
     return {
       post: post,
       comments: comments,
@@ -104,7 +100,7 @@ export default {
     },
     async sendMessage() {
       await this.$axios
-        .$post("http://0.0.0.0:80/comment/", {
+        .$post("/comment/", {
           post_id: this.post.id,
           body: this.message,
           author_id: 1
