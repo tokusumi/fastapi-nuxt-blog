@@ -69,7 +69,7 @@ export default {
     });
 
     return {
-      posts: data,
+      posts: data.data,
       categories: categories.map(x => {
         return x.name;
       }),
@@ -177,7 +177,7 @@ export default {
       await this.$axios
         .$get("/post/")
         .then(res => {
-          this.posts = res;
+          this.posts = res.data;
         })
         .catch(e => {});
     },
