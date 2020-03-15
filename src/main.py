@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from auth import main as auths
 from users import main as users
 from blogs import main as blogs, sub as blogs_sub
 
@@ -13,6 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auths.app)
 app.include_router(users.app)
 app.include_router(blogs.app)
 app.include_router(blogs_sub.app)

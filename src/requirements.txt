@@ -3,5 +3,9 @@ sqlalchemy-utils
 async-exit-stack 
 async-generator
 requests 
+pytz
+pyjwt
+passlib[bcrypt]
+python-multipart
 pytest
 pytest-cov

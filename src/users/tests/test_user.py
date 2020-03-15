@@ -12,6 +12,7 @@ def pytest_db(f):
     which is isolated all others testing and existing database.
     NOTE: must define SessionLocal fixture in conftest.py
     """
+
     def func(SessionLocal, *args, **kwargs):
         def override_get_db():
             try:
@@ -19,10 +20,12 @@ def pytest_db(f):
                 yield db
             finally:
                 db.close()
+
         app.dependency_overrides[get_db] = override_get_db
         f(*args, **kwargs)
 
         app.dependency_overrides[get_db] = get_db
+
     return func
 
 
@@ -32,13 +35,13 @@ def test_create_user():
     create user
     """
     response = client.post(
-        "/users/", json={"email": "foo1", "name": "fooo1", "password": "fo1"}
+        "/users/", json={"email": "foo1", "username": "fooo1", "password": "fo1"}
     )
     assert response.status_code == 200
     assert response.json() == {
         "id": 1,
         "email": "foo1",
-        "name": "fooo1",
+        "username": "fooo1",
         "is_active": True,
     }
 
@@ -49,15 +52,15 @@ def test_get_user():
     create user
     """
     response = client.post(
-        "/users/", json={"email": "foo1", "name": "fooo1", "password": "fo1"}
+        "/users/", json={"email": "foo1", "username": "fooo1", "password": "fo1"}
     )
     assert response.status_code == 200
     response = client.post(
-        "/users/", json={"email": "foo2", "name": "fooo2", "password": "fo2"}
+        "/users/", json={"email": "foo2", "username": "fooo2", "password": "fo2"}
     )
     assert response.status_code == 200
     response = client.post(
-        "/users/", json={"email": "foo3", "name": "fooo3", "password": "fo3"}
+        "/users/", json={"email": "foo3", "username": "fooo3", "password": "fo3"}
     )
     assert response.status_code == 200
     """
@@ -87,11 +90,11 @@ def test_delete_user():
     delete user
     """
     response = client.post(
-        "/users/", json={"email": "foo1", "name": "fooo1", "password": "fo1"}
+        "/users/", json={"email": "foo1", "username": "fooo1", "password": "fo1"}
     )
     assert response.status_code == 200
     response = client.post(
-        "/users/", json={"email": "foo2", "name": "fooo2", "password": "fo2"}
+        "/users/", json={"email": "foo2", "username": "fooo2", "password": "fo2"}
     )
     response = client.delete("/users/", json={"email": "foo1", "password": "fo1"})
     assert response.status_code == 200
@@ -101,6 +104,6 @@ def test_delete_user():
     assert response.json()[0] == {
         "id": 2,
         "email": "foo2",
-        "name": "fooo2",
+        "username": "fooo2",
         "is_active": True,
     }
