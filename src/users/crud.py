@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from auth.token import get_password_hash
+from auth.token import verify_password, get_password_hash
 from . import models, schemas
 
 
@@ -14,14 +14,12 @@ def get_user_by_email_query(db: Session, email: str):
 
 
 def get_user_by_password_query(db: Session, email: str, password: str):
-    hashed_password = get_password_hash(password)
-    return (
-        db.query(models.User)
-        .filter(
-            models.User.email == email, models.User.hashed_password == hashed_password
-        )
-        .first()
-    )
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if not user:
+        return None
+    if not verify_password(password, user.hashed_password):
+        return None
+    return user
 
 
 def get_users_query(db: Session, skip: int = 0, limit: int = 100):

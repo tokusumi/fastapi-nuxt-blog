@@ -25,7 +25,7 @@ def pytest_db(f):
 
         def override_user():
             return auth_schemas.User(
-                id="1", username="foo11", email="foo1", password="fo1", is_active=True
+                id="1", username="fooo1", email="foo1", password="fo1", is_active=True
             )
 
         app.dependency_overrides[get_db] = override_get_db

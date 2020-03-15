@@ -1,1 +1,1 @@
-docker-compose run --rm fastapi pytest blogs/tests --lf
+docker-compose run --rm fastapi pytest --lf

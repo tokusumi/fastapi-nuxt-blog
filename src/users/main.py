@@ -47,6 +47,10 @@ def delete_user(
     current_user: schemas.User = Depends(get_current_active_user),
 ):
     db_user = get_user_by_password_query(db, email=user.email, password=user.password)
+    users = db.query(models.User).all()
+    for user in users:
+        print(user.email, user.hashed_password)
+
     if not db_user:
         raise HTTPException(status_code=400, detail="Does not exist")
     delete_user_query(db, db_user)
