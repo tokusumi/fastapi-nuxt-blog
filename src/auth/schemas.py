@@ -17,6 +17,7 @@ class TokenFullData(TokenData):
 
 
 class User(BaseModel):
+    id: int
     username: str
     email: Optional[str] = None
     is_active: Optional[bool] = None

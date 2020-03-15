@@ -91,12 +91,13 @@ def filter_post_by_tags(db: Session, tag_ids: List[int]):
 
 
 def get_post_query(
-        db: Session,
-        category_id: Optional[int] = None,
-        series_id: Optional[int] = None,
-        tag_ids: Optional[List[int]] = None,
-        skip: int = 0,
-        limit: int = 100):
+    db: Session,
+    category_id: Optional[int] = None,
+    series_id: Optional[int] = None,
+    tag_ids: Optional[List[int]] = None,
+    skip: int = 0,
+    limit: int = 100,
+):
     """get post list
     filter_by:
     - category id
@@ -112,8 +113,8 @@ def get_post_query(
 
 def create_post(db: Session, post: schemas.CreatePost):
     post_dict = post.dict()
-    if post_dict.pop('tag_ids'):
-        post_dict['tag'] = [get_tag_by_id(db, ids) for ids in post.tag_ids]
+    if post_dict.pop("tag_ids"):
+        post_dict["tag"] = [get_tag_by_id(db, ids) for ids in post.tag_ids]
 
     instance = models.Post(**post_dict)
     instance = _create(db, instance)
@@ -132,17 +133,15 @@ def get_comment(db: Session, comment_id: int):
 
 
 def get_comment_query(
-        db: Session,
-        post_id: Optional[int] = None,
-        skip: int = 0,
-        limit: int = 100):
+    db: Session, post_id: Optional[int] = None, skip: int = 0, limit: int = 100
+):
     """get comments by post id"""
     db = db.query(models.Comment).filter(models.Comment.post_id == post_id)
     return db.offset(skip).limit(limit).all()
 
 
-def create_comment(db: Session, comment: schemas.CreateComment):
-    instance = models.Comment(**comment.dict())
+def create_comment(db: Session, comment: schemas.CreateComment, author_id: int):
+    instance = models.Comment(**comment.dict(), author_id=author_id)
     instance = _create(db, instance)
     return instance
 

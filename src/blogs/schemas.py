@@ -58,7 +58,6 @@ class CreatePost(BasePost):
 
 
 class CreatePostReq(BasePost):
-    author_id: int
     category: Optional[str] = None
     series: Optional[str] = None
     tags: Optional[List[str]] = None
@@ -100,7 +99,6 @@ class BaseComment(BaseModel):
 
 class CreateComment(BaseModel):
     post_id: int
-    author_id: Optional[int] = None
     body: str
 
 

@@ -1,6 +1,8 @@
 from starlette.testclient import TestClient
 from main import app
 from settings.database import get_db
+from auth.authentications import get_current_active_user
+from auth import schemas as auth_schemas
 
 client = TestClient(app)
 
@@ -12,6 +14,7 @@ def pytest_db(f):
     which is isolated all others testing and existing database.
     NOTE: must define SessionLocal fixture in conftest.py
     """
+
     def func(SessionLocal, *args, **kwargs):
         def override_get_db():
             try:
@@ -19,10 +22,18 @@ def pytest_db(f):
                 yield db
             finally:
                 db.close()
+
+        def override_user():
+            return auth_schemas.User(
+                id="1", username="foo11", email="foo1", password="fo1", is_active=True
+            )
+
         app.dependency_overrides[get_db] = override_get_db
+        app.dependency_overrides[get_current_active_user] = override_user
         f(*args, **kwargs)
 
         app.dependency_overrides[get_db] = get_db
+
     return func
 
 
@@ -31,9 +42,7 @@ def test_create_category():
     """
     create category
     """
-    response = client.post(
-        "/category/", json={"name": "cat1"}
-    )
+    response = client.post("/category/", json={"name": "cat1"})
     assert response.status_code == 200
 
 
@@ -42,17 +51,11 @@ def test_get_category():
     """
     create category
     """
-    response = client.post(
-        "/category/", json={"name": "cat1"}
-    )
+    response = client.post("/category/", json={"name": "cat1"})
     assert response.status_code == 200
-    response = client.post(
-        "/category/", json={"name": "cat2"}
-    )
+    response = client.post("/category/", json={"name": "cat2"})
     assert response.status_code == 200
-    response = client.post(
-        "/category/", json={"name": "cat3"}
-    )
+    response = client.post("/category/", json={"name": "cat3"})
     assert response.status_code == 200
     """
     get all categories
@@ -80,9 +83,7 @@ def test_create_series():
     """
     create series
     """
-    response = client.post(
-        "/series/", json={"name": "ser1"}
-    )
+    response = client.post("/series/", json={"name": "ser1"})
     assert response.status_code == 200
 
 
@@ -91,17 +92,11 @@ def test_get_series():
     """
     create series
     """
-    response = client.post(
-        "/series/", json={"name": "ser1"}
-    )
+    response = client.post("/series/", json={"name": "ser1"})
     assert response.status_code == 200
-    response = client.post(
-        "/series/", json={"name": "ser2"}
-    )
+    response = client.post("/series/", json={"name": "ser2"})
     assert response.status_code == 200
-    response = client.post(
-        "/series/", json={"name": "ser3"}
-    )
+    response = client.post("/series/", json={"name": "ser3"})
     assert response.status_code == 200
     """
     get all series
@@ -129,9 +124,7 @@ def test_create_tag():
     """
     create tag
     """
-    response = client.post(
-        "/tag/", json={"name": "tag1"}
-    )
+    response = client.post("/tag/", json={"name": "tag1"})
     assert response.status_code == 200
 
 
@@ -140,17 +133,11 @@ def test_get_tag():
     """
     create tag
     """
-    response = client.post(
-        "/tag/", json={"name": "tag1"}
-    )
+    response = client.post("/tag/", json={"name": "tag1"})
     assert response.status_code == 200
-    response = client.post(
-        "/tag/", json={"name": "tag2"}
-    )
+    response = client.post("/tag/", json={"name": "tag2"})
     assert response.status_code == 200
-    response = client.post(
-        "/tag/", json={"name": "tag3"}
-    )
+    response = client.post("/tag/", json={"name": "tag3"})
     assert response.status_code == 200
     """
     get all tag

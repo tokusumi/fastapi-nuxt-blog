@@ -1,6 +1,8 @@
 from starlette.testclient import TestClient
 from main import app
 from users.main import get_db
+from auth.authentications import get_current_active_user
+from auth import schemas as auth_schemas
 
 client = TestClient(app)
 
@@ -21,7 +23,13 @@ def pytest_db(f):
             finally:
                 db.close()
 
+        def override_user():
+            return auth_schemas.User(
+                id="1", username="foo11", email="foo1", password="fo1", is_active=True
+            )
+
         app.dependency_overrides[get_db] = override_get_db
+        app.dependency_overrides[get_current_active_user] = override_user
         f(*args, **kwargs)
 
         app.dependency_overrides[get_db] = get_db

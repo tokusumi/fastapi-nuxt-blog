@@ -51,6 +51,7 @@ def create_post(
     current_user=Depends(get_current_active_user),
 ):
     create_id_post_dict = utils.CreateIDPost(db, post).to_items()
+    create_id_post_dict["author_id"] = current_user.id
     _post = schemas.CreatePost(**create_id_post_dict)
     return crud.create_post(db, _post)
 
@@ -87,7 +88,7 @@ def create_comment(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_active_user),
 ):
-    return crud.create_comment(db, comment)
+    return crud.create_comment(db, comment, author_id=current_user.id)
 
 
 @app.delete("/comment/{comment_id}/", response_model=schemas.Success, tags=["comment"])
