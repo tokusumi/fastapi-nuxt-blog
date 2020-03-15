@@ -24,7 +24,13 @@
       </v-row>
     </v-container>
     <div class="text-center">
-      <v-pagination v-model="page" :length="length" circle></v-pagination>
+      <v-pagination
+        v-model="page"
+        :length="max_page"
+        :total-visible="pagination_len"
+        @input="getPosts"
+        circle
+      ></v-pagination>
     </div>
   </v-card>
 </template>
@@ -35,11 +41,24 @@ export default {
       params: { page: 1, length: 4 }
     });
     return {
-      cards: data,
+      cards: data.data,
+      max_page: data.max_page,
       page: 1,
       length: 4,
+      pagination_len: 6,
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
     };
+  },
+  methods: {
+    getPosts() {
+      this.$axios
+        .$get("/post/?is_private=false", {
+          params: { page: this.page, length: this.length }
+        })
+        .then(data => {
+          this.cards = data.data;
+        });
+    }
   }
 };
 </script>
