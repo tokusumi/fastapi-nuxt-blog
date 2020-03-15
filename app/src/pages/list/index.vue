@@ -32,7 +32,7 @@
 export default {
   async asyncData({ app }) {
     const data = await app.$axios.$get("/post/?is_private=false", {
-      params: { limit: 4 }
+      params: { page: 1, length: 4 }
     });
     return {
       cards: data,

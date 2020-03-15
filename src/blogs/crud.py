@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Optional, List
 from sqlalchemy.orm import Session
 from . import models, schemas
@@ -115,7 +116,9 @@ def get_post_query(
     db = filter_post_by_category(db, category_id) if category_id is not None else db
     db = filter_post_by_series(db, series_id) if series_id is not None else db
     db = filter_post_by_tags(db, tag_ids) if tag_ids is not None else db
-    return db.offset(skip).limit(limit).all()
+    max_page = ceil(db.count() / limit)
+    query = db.offset(skip).limit(limit).all()
+    return query, max_page
 
 
 def create_post(db: Session, post: schemas.CreatePost):

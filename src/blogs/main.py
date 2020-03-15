@@ -11,7 +11,7 @@ models.Base.metadata.create_all(bind=engine)
 app = APIRouter()
 
 
-@app.get("/post/", response_model=List[schemas.Post], tags=["post"])
+@app.get("/post/", response_model=schemas.Posts, tags=["post"])
 def get_post(
     author: Optional[str] = None,
     category: Optional[str] = None,
@@ -29,10 +29,10 @@ def get_post(
         author=author, category=category, series=series, tags=tags, is_private=is_private
     )
     filtering_dict = utils.FilterIDPost(db, filtering).to_items() if filtering else {}
-    query = crud.get_post_query(db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict)
+    query, max_page = crud.get_post_query(db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict)
     if len(query) == 0:
         raise HTTPException(status_code=400, detail="Post does not exist")
-    return query
+    return {'data': query, 'max_page': max_page}
 
 
 @app.get("/post/{post_id}/", response_model=schemas.Post, tags=["post"])

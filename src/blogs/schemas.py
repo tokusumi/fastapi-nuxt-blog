@@ -94,6 +94,11 @@ class Post(BasePost):
         return [tag.name for tag in self.tags]
 
 
+class Posts(BaseModel):
+    data: List[Post]
+    max_page: int
+
+
 class BaseComment(BaseModel):
     pass
 

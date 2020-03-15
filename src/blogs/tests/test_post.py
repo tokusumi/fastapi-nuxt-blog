@@ -105,40 +105,43 @@ def test_get_post():
     # default
     response = client.get("/post/")
     assert response.status_code == 200
-    assert len(response.json()) == 3
+    assert len(response.json()['data']) == 3
+    assert response.json()['max_page'] == 1
 
     # check page 1
     response = client.get("/post/?page=1&length=2")
     assert response.status_code == 200
-    assert len(response.json()) == 2
-    assert response.json()[0]["title"] == "1"
+    assert len(response.json()['data']) == 2
+    assert response.json()['data'][0]["title"] == "1"
+    assert response.json()['max_page'] == 2
 
     # check page 2
     response = client.get("/post/?page=2&length=2")
     assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json()[0]["title"] == "3"
+    assert len(response.json()['data']) == 1
+    assert response.json()['data'][0]["title"] == "3"
+    assert response.json()['max_page'] == 2
 
     """filter"""
     # category
     response = client.get(f"/post/?category={category_name}")
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()['data']) == 1
 
     # series
     response = client.get(f"/post/?series={series_name}")
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()['data']) == 1
 
     # tag
     response = client.get(f"/post/?tags={tag_name}")
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()['data']) == 1
 
     # is_public
     response = client.get(f"/post/?is_private=False")
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()['data']) == 1
 
 
 @pytest_db
