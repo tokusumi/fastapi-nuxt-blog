@@ -31,15 +31,15 @@
 <script>
 export default {
   async asyncData({ app }) {
-    const data = await app.$axios.$get("/post/");
+    const data = await app.$axios.$get("/post/?is_private=false", {
+      params: { limit: 4 }
+    });
     return {
       cards: data,
+      page: 1,
+      length: 4,
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
     };
-  },
-  data: () => ({
-    length: 4,
-    page: 1
-  })
+  }
 };
 </script>

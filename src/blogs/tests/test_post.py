@@ -107,17 +107,17 @@ def test_get_post():
     assert response.status_code == 200
     assert len(response.json()) == 3
 
-    # check skip
-    response = client.get("/post/?skip=1")
-    assert response.status_code == 200
-    assert len(response.json()) == 2
-    assert response.json()[0]["title"] == "2"
-
-    # check limit
-    response = client.get("/post/?limit=2")
+    # check page 1
+    response = client.get("/post/?page=1&length=2")
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0]["title"] == "1"
+
+    # check page 2
+    response = client.get("/post/?page=2&length=2")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["title"] == "3"
 
     """filter"""
     # category
