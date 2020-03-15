@@ -68,6 +68,7 @@ class FilterPost(BaseModel):
     category: Optional[str] = None
     series: Optional[str] = None
     tags: Optional[List[str]] = None
+    is_private: Optional[bool] = True
 
 
 class Post(BasePost):

@@ -153,3 +153,21 @@ def test_filter_by_tags(SessionLocal):
     q = crud.filter_post_by_tags(q, [tag1.id, tag2.id])
     assert len(q.all()) == 1
     db.close()
+
+
+def test_filter_by_is_public(SessionLocal):
+    db = SessionLocal()
+    user = u_crud.create_user_query(db, u_schemas.UserCreate(**{"email": "foo", "name": "fooo", "password": "fo"}))
+
+    posts = {
+        'title': 'hoge',
+        'body': 'fuga',
+        'author_id': user.id,
+        'is_public': False
+    }
+    crud.create_post(db, schemas.CreatePost(**posts))
+
+    q = db.query(models.Post)
+    q = crud.filter_post_by_is_public(q)
+    assert len(q.all()) == 0
+    db.close()

@@ -87,15 +87,15 @@ def test_get_post():
     assert tag.status_code == 200
 
     response = client.post(
-        "/post/", json={"title": "1", "body": "1", "category": category_name,},
+        "/post/", json={"title": "1", "body": "1", "category": category_name, },
     )
     assert response.status_code == 200
     response = client.post(
-        "/post/", json={"title": "2", "body": "2", "series": series_name,},
+        "/post/", json={"title": "2", "body": "2", "series": series_name, },
     )
     assert response.status_code == 200
     response = client.post(
-        "/post/", json={"title": "3", "body": "3", "tags": [tag_name]},
+        "/post/", json={"title": "3", "body": "3", "tags": [tag_name], "is_public": True},
     )
     assert response.status_code == 200
 
@@ -135,6 +135,11 @@ def test_get_post():
     assert response.status_code == 200
     assert len(response.json()) == 1
 
+    # is_public
+    response = client.get(f"/post/?is_private=False")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
 
 @pytest_db
 def test_get_post_by_id():
@@ -146,10 +151,10 @@ def test_get_post_by_id():
     )
     assert user.status_code == 200
 
-    response = client.post("/post/", json={"title": "1", "body": "1",})
+    response = client.post("/post/", json={"title": "1", "body": "1", })
     assert response.status_code == 200
 
-    response = client.post("/post/", json={"title": "2", "body": "2",})
+    response = client.post("/post/", json={"title": "2", "body": "2", })
     assert response.status_code == 200
 
     response = client.get("/post/2/")
@@ -222,7 +227,7 @@ def test_get_comment():
     assert user.status_code == 200
     user_id = user.json()["id"]
 
-    response = client.post("/post/", json={"title": "1", "body": "1",})
+    response = client.post("/post/", json={"title": "1", "body": "1", })
     assert response.status_code == 200
 
     post_id = response.json()["id"]

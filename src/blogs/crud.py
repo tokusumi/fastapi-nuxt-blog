@@ -90,11 +90,16 @@ def filter_post_by_tags(db: Session, tag_ids: List[int]):
     return db
 
 
+def filter_post_by_is_public(db: Session):
+    return db.filter(models.Post.is_public == True)
+
+
 def get_post_query(
     db: Session,
     category_id: Optional[int] = None,
     series_id: Optional[int] = None,
     tag_ids: Optional[List[int]] = None,
+    is_private: Optional[bool] = True,
     skip: int = 0,
     limit: int = 100,
 ):
@@ -103,8 +108,10 @@ def get_post_query(
     - category id
     - series id
     - tag id
+    - is_private
     """
     db = db.query(models.Post)
+    db = filter_post_by_is_public(db) if not is_private else db
     db = filter_post_by_category(db, category_id) if category_id is not None else db
     db = filter_post_by_series(db, series_id) if series_id is not None else db
     db = filter_post_by_tags(db, tag_ids) if tag_ids is not None else db

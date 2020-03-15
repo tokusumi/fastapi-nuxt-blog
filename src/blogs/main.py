@@ -17,16 +17,18 @@ def get_post(
     category: Optional[str] = None,
     series: Optional[str] = None,
     tags: Optional[List[str]] = Query(None),
+    is_private: Optional[bool] = True,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_active_user),
 ):
     filtering = schemas.FilterPost(
-        author=author, category=category, series=series, tags=tags
+        author=author, category=category, series=series, tags=tags, is_private=is_private
     )
+
     filtering_dict = utils.FilterIDPost(db, filtering).to_items() if filtering else {}
-    query = crud.get_post_query(db, skip=skip, limit=limit, **filtering_dict)
+    query = crud.get_post_query(db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict)
     if len(query) == 0:
         raise HTTPException(status_code=400, detail="Post does not exist")
     return query
