@@ -90,6 +90,7 @@ export default {
         .then(res => {
           console.log("success");
           this.clear();
+          this.$router.push(`/post/${res.id}/`);
         })
         .catch(e => {});
     },

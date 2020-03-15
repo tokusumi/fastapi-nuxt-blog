@@ -1,8 +1,8 @@
 <template>
-  <v-card class="mx-auto" max-width="1000">
-    <v-container fluid>
+  <v-card class="mx-auto" max-width="900">
+    <v-container fluid class="mx-auto" max-width="800">
       <v-row dense>
-        <v-card>
+        <v-card width="100%">
           <v-img
             :src="src"
             class="white--text align-end"
@@ -18,41 +18,46 @@
         </v-card>
       </v-row>
     </v-container>
-    <v-list>
-      <div class="headline">{{comment_num}} Comments</div>
-      <v-divider></v-divider>
-      <v-list-item v-for="comment in comments" :key="comment.id">
-        <v-list-item-icon>
-          <v-icon>mdi-emoticon</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title v-text="comment.body"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider></v-divider>
-    </v-list>
-    <v-form>
-      <v-container>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field
-              v-model="message"
-              :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
-              :prepend-icon="icon"
-              filled
-              clear-icon="mdi-close-circle"
-              clearable
-              label="Comment"
-              type="text"
-              @click:append="toggleMarker"
-              @click:append-outer="sendMessage"
-              @click:prepend="changeIcon"
-              @click:clear="clearMessage"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-form>
+
+    <v-container>
+      <v-card width="100%">
+        <v-card-title class="headline">{{comment_num}} Comments</v-card-title>
+
+        <v-list>
+          <v-list-item v-for="comment in comments" :key="comment.id">
+            <v-list-item-icon>
+              <v-icon>mdi-emoticon</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="comment.body"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+        </v-list>
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="message"
+                  :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
+                  :prepend-icon="icon"
+                  filled
+                  clear-icon="mdi-close-circle"
+                  clearable
+                  label="Comment"
+                  type="text"
+                  @click:append="toggleMarker"
+                  @click:append-outer="sendMessage"
+                  @click:prepend="changeIcon"
+                  @click:clear="clearMessage"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-card>
+    </v-container>
   </v-card>
 </template>
 <script>
@@ -105,10 +110,12 @@ export default {
           body: this.message,
           author_id: 1
         })
+        .then(comment => {
+          this.resetIcon();
+          this.clearMessage();
+          this.addComment(comment);
+        })
         .catch(e => {});
-
-      this.resetIcon();
-      this.clearMessage();
     },
     clearMessage() {
       this.message = "";
@@ -120,6 +127,9 @@ export default {
       this.iconIndex === this.icons.length - 1
         ? (this.iconIndex = 0)
         : this.iconIndex++;
+    },
+    clearComment(comment) {
+      this.comments.push(comment);
     }
   }
 };
