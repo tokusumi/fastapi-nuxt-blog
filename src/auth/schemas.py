@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class Token(BaseModel):
-    token: str
+    access_token: str
 
 
 class TokenData(BaseModel):

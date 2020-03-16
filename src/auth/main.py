@@ -45,4 +45,4 @@ async def login_for_access_token(
         )
     token_data = get_token_data(user, schemas.TokenData)
     access_token = token.add_access_token(token_data=token_data)
-    return {"token": access_token}
+    return {"access_token": access_token}

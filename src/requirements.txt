@@ -7,5 +7,6 @@ pytz
 pyjwt
 passlib[bcrypt]
 python-multipart
+pillow
 pytest
 pytest-cov

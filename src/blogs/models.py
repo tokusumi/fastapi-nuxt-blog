@@ -1,11 +1,21 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, text, Text, Table
+from sqlalchemy import (
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    DateTime,
+    text,
+    Text,
+    Table,
+)
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.orm import relationship
 from settings.database import Base
 
 
 class Category(Base):
-    __tablename__ = 'category'
+    __tablename__ = "category"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
@@ -15,7 +25,7 @@ class Category(Base):
 
 
 class Tag(Base):
-    __tablename__ = 'tag'
+    __tablename__ = "tag"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
@@ -26,14 +36,15 @@ class Tag(Base):
 
 
 post__tag = Table(
-    'post__tag', Base.metadata,
-    Column('tag_id', Integer, ForeignKey('tag.id')),
-    Column('post_id', Integer, ForeignKey('post.id'))
+    "post__tag",
+    Base.metadata,
+    Column("tag_id", Integer, ForeignKey("tag.id")),
+    Column("post_id", Integer, ForeignKey("post.id")),
 )
 
 
 class Series(Base):
-    __tablename__ = 'series'
+    __tablename__ = "series"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
@@ -43,15 +54,16 @@ class Series(Base):
 
 
 class Post(Base):
-    __tablename__ = 'post'
+    __tablename__ = "post"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     body = Column(Text)
-    author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    image = Column(String, default="")
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     author = relationship("User", backref="posts")
-    series_id = Column(Integer, ForeignKey('series.id'), nullable=True)
+    series_id = Column(Integer, ForeignKey("series.id"), nullable=True)
     series = relationship("Series", backref="posts")
-    category_id = Column(Integer, ForeignKey('category.id'), nullable=True)
+    category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
     category = relationship("Category", backref="posts")
     tag = relationship("Tag", secondary=lambda: post__tag, backref="posts")
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
@@ -64,10 +76,10 @@ class Post(Base):
 
 
 class Comment(Base):
-    __tablename__ = 'comments'
+    __tablename__ = "comments"
     id = Column(Integer, primary_key=True, index=True)
-    author_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     author = relationship("User", backref="comments")
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
     body = Column(Text(100))
-    post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey("post.id"), nullable=False)

@@ -7,6 +7,10 @@ class Success(BaseModel):
     success: bool = True
 
 
+class Image(BaseModel):
+    image: str
+
+
 class CreateCategory(BaseModel):
     name: str
 
@@ -45,6 +49,7 @@ class Tag(BaseModel):
 
 class BasePost(BaseModel):
     title: str
+    image: str = ""
     body: str
     is_public: bool = False
     notification: bool = False

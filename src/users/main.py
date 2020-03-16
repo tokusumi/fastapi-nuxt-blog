@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -13,6 +13,7 @@ from .crud import (
 )
 from settings.database import engine, get_db
 from auth.authentications import get_current_active_user
+from . import process_image
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -60,3 +61,15 @@ def delete_user(
 @app.get("/users/me/", response_model=schemas.User)
 async def read_users_me(current_user: schemas.User = Depends(get_current_active_user)):
     return current_user
+
+
+@app.post("/users/image/", response_model=schemas.SuccessSchema)
+async def add_icon(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user),
+):
+    await process_image.save_and_add_icon(file, current_user.id, db)
+
+    return {"result": True}
+

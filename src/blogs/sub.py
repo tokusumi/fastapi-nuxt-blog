@@ -1,9 +1,10 @@
 from typing import List
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from . import schemas, crud
 from settings.database import get_db
 from auth.authentications import get_current_active_user
+from images.process import save_image
 
 app = APIRouter()
 
@@ -81,3 +82,11 @@ def create_tag(
     if instance:
         raise HTTPException(status_code=400, detail="Tag already registered")
     return crud.create_tag(db, tag)
+
+
+@app.post("/image/", response_model=schemas.Image)
+async def upload_image(
+    file: UploadFile = File(...), current_user=Depends(get_current_active_user)
+):
+    pics = await save_image(file, "./pics/posts")
+    return {"image": pics}
