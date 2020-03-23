@@ -90,3 +90,11 @@ async def upload_image(
 ):
     pics = await save_image(file, "./pics/posts")
     return {"image": pics}
+
+
+@app.post("/image/doc/", response_model=schemas.Image)
+async def upload_image_in_doc(
+    file: UploadFile = File(...), current_user=Depends(get_current_active_user)
+):
+    pics = await save_image(file, "./pics/docs")
+    return {"image": pics}
