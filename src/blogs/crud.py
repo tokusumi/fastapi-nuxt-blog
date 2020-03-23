@@ -131,6 +131,13 @@ def create_post(db: Session, post: schemas.CreatePost):
     return instance
 
 
+def update_post(db: Session, base_post: models.Post, post: schemas.UpdatePost):
+    base_post.update_dict(post.to_items())
+    db.commit()
+    db.refresh(base_post)
+    return base_post
+
+
 def delete_post(db: Session, post_id: int):
     post = db.query(models.Post).filter(models.Post.id == post_id)
     post.delete()

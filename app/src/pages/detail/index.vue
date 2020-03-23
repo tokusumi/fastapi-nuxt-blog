@@ -11,6 +11,12 @@
           >
             <v-card-title v-text="post.title"></v-card-title>
           </v-img>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn icon v-if="is_author" :to="update_path">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+          </v-card-actions>
           <v-card-text>{{post.body}}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -70,6 +76,8 @@ export default {
       return [];
     });
     return {
+      update_path: `/update/?id=${query.id}`,
+      is_author: post.author.id === app.$auth.user.id ? true : false,
       post: post,
       comments: comments,
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"

@@ -74,6 +74,11 @@ class Post(Base):
     def __repr__(self):
         return self.title
 
+    def update_dict(self, dict):
+        for name, value in dict.items():
+            if name in self.__dict__:
+                setattr(self, name, value)
+
 
 class Comment(Base):
     __tablename__ = "comments"

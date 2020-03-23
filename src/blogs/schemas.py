@@ -1,6 +1,7 @@
 from typing import Optional, List
 from pydantic import BaseModel
 from datetime import datetime
+from users.schemas import User
 
 
 class Success(BaseModel):
@@ -68,6 +69,26 @@ class CreatePostReq(BasePost):
     tags: Optional[List[str]] = None
 
 
+class BaseUpdatePost(BaseModel):
+    title: Optional[str] = None
+    image: Optional[str] = None
+    body: Optional[str] = None
+    is_public: Optional[bool] = None
+    notification: Optional[bool] = None
+
+
+class UpdatePostReq(BaseUpdatePost):
+    category: Optional[str] = None
+    series: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+
+class UpdatePost(BaseUpdatePost):
+    category_id: Optional[int] = None
+    series_id: Optional[int] = None
+    tag_ids: Optional[List[int]] = None
+
+
 class FilterPost(BaseModel):
     author: Optional[str] = None
     category: Optional[str] = None
@@ -78,16 +99,13 @@ class FilterPost(BaseModel):
 
 class Post(BasePost):
     id: int
-    author: str
+    author: User
     category: Optional[str] = None
     series: Optional[str] = None
     tags: Optional[List[str]] = None
 
     class Config:
         orm_mode = True
-
-    def author(self):
-        return self.author.name
 
     def category(self):
         return self.category.name

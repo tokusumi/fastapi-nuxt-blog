@@ -26,13 +26,19 @@ def get_post(
     skip = length * (page - 1)
     limit = length
     filtering = schemas.FilterPost(
-        author=author, category=category, series=series, tags=tags, is_private=is_private
+        author=author,
+        category=category,
+        series=series,
+        tags=tags,
+        is_private=is_private,
     )
     filtering_dict = utils.FilterIDPost(db, filtering).to_items() if filtering else {}
-    query, max_page = crud.get_post_query(db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict)
+    query, max_page = crud.get_post_query(
+        db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict
+    )
     if len(query) == 0:
         raise HTTPException(status_code=400, detail="Post does not exist")
-    return {'data': query, 'max_page': max_page}
+    return {"data": query, "max_page": max_page}
 
 
 @app.get("/post/{post_id}/", response_model=schemas.Post, tags=["post"])
@@ -57,6 +63,23 @@ def create_post(
     create_id_post_dict["author_id"] = current_user.id
     _post = schemas.CreatePost(**create_id_post_dict)
     return crud.create_post(db, _post)
+
+
+@app.put("/post/{post_id}/", response_model=schemas.Post, tags=["post"])
+def update_post(
+    post_id: int,
+    post: schemas.UpdatePostReq,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_active_user),
+):
+    _post = crud.get_post(db, post_id)
+    if _post.author_id != current_user.id:
+        raise HTTPException(status_code=400, detail="must be modified by author")
+    update_postID = utils.UpdateIDPost(db, post)
+    if len(update_postID.to_items()) == 0:
+        raise HTTPException(status_code=400, detail="no context")
+
+    return crud.update_post(db, _post, update_postID)
 
 
 @app.delete("/post/{post_id}/", response_model=schemas.Success, tags=["post"])

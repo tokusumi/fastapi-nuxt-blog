@@ -37,9 +37,20 @@
 <script>
 export default {
   async asyncData({ app }) {
-    const data = await app.$axios.$get("/post/?is_private=false", {
-      params: { page: 1, length: 4 }
-    });
+    const data = await app.$axios
+      .$get("/post/?is_private=false", {
+        params: { page: 1, length: 4 }
+      })
+      .then(data => {
+        data;
+      })
+      .catch(err => {
+        console.log(err);
+        return {
+          data: [],
+          max_page: 1
+        };
+      });
     return {
       cards: data.data,
       max_page: data.max_page,
@@ -57,6 +68,9 @@ export default {
         })
         .then(data => {
           this.cards = data.data;
+        })
+        .catch(e => {
+          console.log(e);
         });
     }
   }

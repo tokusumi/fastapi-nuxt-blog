@@ -90,9 +90,11 @@ export default {
         .then(res => {
           console.log("success");
           this.clear();
-          this.$router.push(`/post/${res.id}/`);
+          this.$router.push(`/detail/?id=${res.id}`);
         })
-        .catch(e => {});
+        .catch(e => {
+          console.log(e);
+        });
     },
     clear() {
       this.title = "";

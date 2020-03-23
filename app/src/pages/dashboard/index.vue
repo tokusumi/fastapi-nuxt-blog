@@ -91,7 +91,7 @@ export default {
         sortable: false,
         value: "title"
       },
-      { text: "Author", value: "author" },
+      { text: "Author", value: "author.username" },
       { text: "Category", value: "category" },
       { text: "Series", value: "series" },
       { text: "Tags", value: "tag" },

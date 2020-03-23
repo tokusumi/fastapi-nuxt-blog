@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from . import schemas, crud
 
 
-class BaseNameToId():
+class BaseNameToId:
     def __init__(self, db: Session, data: schemas.BaseModel):
         self.db = db
         self.data = data
@@ -40,9 +40,9 @@ class FilterIDPost(BaseNameToId):
 
     def to_items(self):
         return {
-            'category_id': self.category_id,
-            'series_id': self.series_id,
-            'tag_ids': self.tag_ids
+            "category_id": self.category_id,
+            "series_id": self.series_id,
+            "tag_ids": self.tag_ids,
         }
 
 
@@ -53,10 +53,37 @@ class CreateIDPost(BaseNameToId):
 
     def to_items(self):
         ids = {
-            'category_id': self.category_id,
-            'series_id': self.series_id,
-            'tag_ids': self.tag_ids
+            "category_id": self.category_id,
+            "series_id": self.series_id,
+            "tag_ids": self.tag_ids,
         }
-        return dict(**ids,
-                    **{f: g for f, g in self.data.dict().items()
-                       if f not in ['category', 'series', 'tags']})
+        return dict(
+            **ids,
+            **{
+                f: g
+                for f, g in self.data.dict().items()
+                if f not in ["category", "series", "tags"]
+            }
+        )
+
+
+class UpdateIDPost(BaseNameToId):
+    def __init__(self, db: Session, UpdatePost: schemas.UpdatePost):
+        self.db = db
+        self.data = UpdatePost
+
+    def to_items(self):
+        ids = {
+            "category_id": self.category_id,
+            "series_id": self.series_id,
+            "tag_ids": self.tag_ids,
+        }
+        _dict = dict(
+            **ids,
+            **{
+                f: g
+                for f, g in self.data.dict().items()
+                if f not in ["category", "series", "tags"]
+            }
+        )
+        return {f: g for f, g in _dict.items() if g is not None}
