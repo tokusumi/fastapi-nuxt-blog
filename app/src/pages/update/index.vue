@@ -41,9 +41,13 @@ export default {
           id: data.id,
           title: data.title,
           body: data.body,
-          select_tags: [],
-          select_category: "",
-          select_series: "",
+          select_tags: data.tags
+            ? data.tags.map(x => {
+                return x.name;
+              })
+            : [],
+          select_category: data.category ? data.category.name : "",
+          select_series: data.series ? data.series.name : "",
           notify_switch: data.notification,
           publish_switch: data.is_public
         };

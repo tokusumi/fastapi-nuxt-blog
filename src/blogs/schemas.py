@@ -100,21 +100,24 @@ class FilterPost(BaseModel):
 class Post(BasePost):
     id: int
     author: User
-    category: Optional[str] = None
-    series: Optional[str] = None
-    tags: Optional[List[str]] = None
+    category: Category = None
+    series: Series = None
+    tags: List[Tag] = None
+    # category: Optional[str] = None
+    # series: Optional[str] = None
+    # tags: Optional[List[str]] = None
 
     class Config:
         orm_mode = True
 
-    def category(self):
-        return self.category.name
+    # def category(self):
+    #     return self.category.name
 
-    def series(self):
-        return self.series.name
+    # def series(self):
+    #     return self.series.name
 
-    def tags(self):
-        return [tag.name for tag in self.tags]
+    # def tags(self):
+    #     return [tag.name for tag in self.tags]
 
 
 class Posts(BaseModel):
@@ -134,12 +137,9 @@ class CreateComment(BaseModel):
 class Comment(BaseComment):
     id: int
     post_id: int
-    author: str
+    author: User
     body: str
     created_at: datetime
 
     class Config:
         orm_mode = True
-
-    def author(self):
-        return self.author.name

@@ -12,11 +12,23 @@
             <v-card-title v-text="post.title"></v-card-title>
           </v-img>
           <v-card-actions>
+            <v-btn
+              text
+              v-if="post.category"
+              :to="'/list/?category=' + post.category.name"
+            >Category > {{post.category.name}}</v-btn>
+
             <v-spacer></v-spacer>
+            <v-icon>mdi-emoticon</v-icon>
             <v-btn icon v-if="is_author" :to="update_path">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
           </v-card-actions>
+          <v-list>
+            <v-lsit-item v-for="tag in post.tags" :key="tag.id">
+              <v-btn text :to="'/list/?tag=' + tag.name">{{tag.name}}</v-btn>
+            </v-lsit-item>
+          </v-list>
           <v-card-text>{{post.body}}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

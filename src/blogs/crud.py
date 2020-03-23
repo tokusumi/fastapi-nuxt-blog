@@ -133,6 +133,12 @@ def create_post(db: Session, post: schemas.CreatePost):
 
 def update_post(db: Session, base_post: models.Post, post: schemas.UpdatePost):
     base_post.update_dict(post.to_items())
+
+    if post.tag_ids:
+        for tag_id in post.tag_ids:
+            tag = get_tag_by_id(db, tag_id)
+            if tag:
+                base_post.tag.append(tag)
     db.commit()
     db.refresh(base_post)
     return base_post

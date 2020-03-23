@@ -42,7 +42,7 @@ export default {
         params: { page: 1, length: 4 }
       })
       .then(data => {
-        data;
+        return data;
       })
       .catch(err => {
         console.log(err);
