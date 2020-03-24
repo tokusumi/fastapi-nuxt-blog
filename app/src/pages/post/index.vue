@@ -14,7 +14,17 @@
           <v-select v-model="select_tags" :items="tags" label="Select tags" multiple chips></v-select>
         </v-col>
       </v-row>
-      <v-textarea v-model="body" name="body" filled label="Body" auto-grow :value="body" required></v-textarea>
+      <div class="mavonEditor">
+        <no-ssr>
+          <mavon-editor
+            ref="md"
+            v-model="body"
+            :toolbars="markdownOption"
+            :language="'ja'"
+            @imgAdd="imgAdd"
+          />
+        </no-ssr>
+      </div>
       <v-switch v-model="notify_switch" :label="`${notifyMessage()}`"></v-switch>
       <v-switch v-model="publish_switch" :label="`${publishMessage()}`"></v-switch>
     </v-container>
@@ -58,7 +68,28 @@ export default {
     notify_switch: true,
     publish_switch: false,
     isLoading: false,
-    form: false
+    form: false,
+    markdownOption: {
+      bold: true,
+      italic: true,
+      header: true,
+      underline: true,
+      strikethrough: true,
+      mark: true,
+      superscript: true,
+      subscript: true,
+      quote: true,
+      ol: true,
+      ul: true,
+      link: true,
+      imagelink: true,
+      code: true,
+      table: true,
+      fullscreen: true,
+      readmodel: true,
+      htmlcode: true,
+      help: true
+    }
   }),
   methods: {
     notifyMessage() {
@@ -102,7 +133,30 @@ export default {
       this.select_tags = [];
       this.select_category = "";
       this.select_series = "";
+    },
+    imgAdd(pos, $file) {
+      let formData = new FormData();
+      formData.append("file", $file);
+      this.$axios
+        .$post("/image/doc/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(res => {
+          this.$refs.md.$img2Url(pos, res.image);
+        })
+        .catch(errorMsg => alert(errorMsg))
+        .finally(() => {
+          return false;
+        });
     }
   }
 };
 </script>
+<style scoped>
+.mavonEditor {
+  width: 100%;
+  height: "500px";
+}
+</style>

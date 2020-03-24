@@ -29,7 +29,19 @@
               <v-btn text :to="'/list/?tag=' + tag.name">{{tag.name}}</v-btn>
             </v-lsit-item>
           </v-list>
-          <v-card-text>{{post.body}}</v-card-text>
+          <v-card-text>
+            <no-ssr>
+              <mavon-editor
+                v-model="post.body"
+                defaultOpen="preview"
+                :toolbarsFlag="false"
+                :subfield="false"
+                :editable="false"
+                :boxShadow="false"
+                :language="'ja'"
+              />
+            </no-ssr>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
           </v-card-actions>
@@ -110,7 +122,22 @@ export default {
       "mdi-emoticon-neutral",
       "mdi-emoticon-sad",
       "mdi-emoticon-tongue"
-    ]
+    ],
+    markdownOption: {
+      readmodel: true,
+      htmlcode: true,
+      help: true,
+      toolbarsFlag: true,
+      subfield: true,
+      defaultOpen: "preview",
+      navigation: true,
+      shortCut: true,
+      editable: true,
+      toolbars: {
+        subfield: false,
+        preview: true
+      }
+    }
   }),
 
   computed: {

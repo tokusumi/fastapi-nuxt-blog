@@ -21,13 +21,23 @@
                     <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-select v-model="editedItem.category" :items="categories" label="Calories"></v-select>
+                    <v-select
+                      v-model="editedItem.category.name"
+                      :items="categories"
+                      label="Calories"
+                    ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-select v-model="editedItem.series" :items="serieses" label="Series"></v-select>
+                    <v-select v-model="editedItem.series.name" :items="serieses" label="Series"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="8">
-                    <v-select v-model="editedItem.tag" :items="tags" label="Tags" multiple chips></v-select>
+                    <v-select
+                      v-model="editedItem.tag.name"
+                      :items="tags"
+                      label="Tags"
+                      multiple
+                      chips
+                    ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="3">
                     <v-switch v-model="editedItem.is_public" :label="`${publishMessage()}`"></v-switch>
@@ -46,6 +56,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
+      <v-icon small class="mr-2" @click="showItem(item)">mdi-book-open-variant</v-icon>
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
@@ -92,9 +103,9 @@ export default {
         value: "title"
       },
       { text: "Author", value: "author.username" },
-      { text: "Category", value: "category" },
-      { text: "Series", value: "series" },
-      { text: "Tags", value: "tag" },
+      { text: "Category", value: "category.name" },
+      { text: "Series", value: "series.name" },
+      { text: "Tags", value: "tag.name" },
       { text: "Is public", value: "is_public" },
       { text: "Actions", value: "actions", sortable: false }
     ],
@@ -136,7 +147,9 @@ export default {
     initialize() {
       this.sendGetPost();
     },
-
+    showItem(item) {
+      this.$router.push(`/detail/?id=${item.id}`);
+    },
     editItem(item) {
       this.editedIndex = this.posts.indexOf(item);
       this.editedItem = Object.assign({}, item);

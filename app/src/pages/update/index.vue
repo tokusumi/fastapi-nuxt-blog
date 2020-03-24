@@ -14,15 +14,17 @@
           <v-select v-model="post.select_tags" :items="tags" label="Select tags" multiple chips></v-select>
         </v-col>
       </v-row>
-      <v-textarea
-        v-model="post.body"
-        name="body"
-        filled
-        label="Body"
-        auto-grow
-        :value="post.body"
-        required
-      ></v-textarea>
+      <div class="mavonEditor">
+        <no-ssr>
+          <mavon-editor
+            ref="md"
+            v-model="post.body"
+            :toolbars="markdownOption"
+            :language="'ja'"
+            @imgAdd="imgAdd"
+          />
+        </no-ssr>
+      </div>
       <v-switch v-model="post.notify_switch" :label="`${notifyMessage()}`"></v-switch>
       <v-switch v-model="post.publish_switch" :label="`${publishMessage()}`"></v-switch>
     </v-container>
@@ -89,7 +91,28 @@ export default {
   },
   data: () => ({
     isLoading: false,
-    form: false
+    form: false,
+    markdownOption: {
+      bold: true,
+      italic: true,
+      header: true,
+      underline: true,
+      strikethrough: true,
+      mark: true,
+      superscript: true,
+      subscript: true,
+      quote: true,
+      ol: true,
+      ul: true,
+      link: true,
+      imagelink: true,
+      code: true,
+      table: true,
+      fullscreen: true,
+      readmodel: true,
+      htmlcode: true,
+      help: true
+    }
   }),
   methods: {
     notifyMessage() {
@@ -133,7 +156,30 @@ export default {
       this.post.select_tags = [];
       this.post.select_category = "";
       this.post.select_series = "";
+    },
+    imgAdd(pos, $file) {
+      let formData = new FormData();
+      formData.append("file", $file);
+      this.$axios
+        .$post("/image/doc/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(res => {
+          this.$refs.md.$img2Url(pos, res.image);
+        })
+        .catch(errorMsg => alert(errorMsg))
+        .finally(() => {
+          return false;
+        });
     }
   }
 };
 </script>
+<style scoped>
+.mavonEditor {
+  width: 100%;
+  height: "500px";
+}
+</style>
