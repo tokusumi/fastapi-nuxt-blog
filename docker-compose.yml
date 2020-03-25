@@ -11,18 +11,18 @@ services:
         - "3000:3000"
     environment:
         HOST: 0.0.0.0
-        # API_URL: http://fastapi:80/
-        # API_URL_BROWSER: http://localhost:80/
+        API_URL: http://fastapi:80/
+        API_URL_BROWSER: http://localhost:80/
 
   fastapi:
-    build: ./src
+    build: ./backend
     container_name: fastapi
     command: /start-reload.sh
     # command: bash
     ports:
       - 80:80
     volumes:
-      - ./src:/app
+      - ./backend/app:/app
     environment:
-      - DATABASE_URL=sqlite:///./test.db
+      - DATABASE_URL=sqlite:////app/app/test.db
     tty: true

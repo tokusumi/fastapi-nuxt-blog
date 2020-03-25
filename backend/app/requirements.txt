@@ -1,0 +1,13 @@
+sqlalchemy
+sqlalchemy-utils
+alembic
+async-exit-stack 
+async-generator
+requests 
+pytz
+pyjwt
+passlib[bcrypt]
+python-multipart
+pillow
+pytest
+pytest-cov
