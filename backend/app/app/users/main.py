@@ -5,10 +5,12 @@ from sqlalchemy.orm import Session
 
 from app.users import models, schemas
 from app.users.crud import (
+    get_user_by_id_query,
     get_user_by_email_query,
     get_user_by_password_query,
     get_users_query,
     create_user_query,
+    update_user,
     delete_user_query,
 )
 from app.db.session import get_db
@@ -40,6 +42,19 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return create_user_query(db=db, user=user)
 
 
+@app.put("/users/", response_model=schemas.User, tags=["user"])
+def update_users(
+    user: schemas.UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user),
+):
+    current_user = get_user_by_id_query(db, current_user.id)
+    new_user, is_update = update_user(db, current_user, user)
+    if not is_update:
+        raise HTTPException(status_code=400, detail="only same value")
+    return new_user
+
+
 @app.delete("/users/", response_model=schemas.User, tags=["user"])
 def delete_user(
     user: schemas.UserDelete,
@@ -47,9 +62,6 @@ def delete_user(
     current_user: schemas.User = Depends(get_current_active_user),
 ):
     db_user = get_user_by_password_query(db, email=user.email, password=user.password)
-    users = db.query(models.User).all()
-    for user in users:
-        print(user.email, user.hashed_password)
 
     if not db_user:
         raise HTTPException(status_code=400, detail="Does not exist")

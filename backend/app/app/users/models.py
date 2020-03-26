@@ -16,3 +16,11 @@ class User(Base):
 
     def __str__(self):
         return self.email
+
+    def update_dict(self, dict):
+        is_update = False
+        for name, value in dict.items():
+            if name in self.__dict__ and value != getattr(self, name):
+                setattr(self, name, value)
+                is_update = True
+        return is_update

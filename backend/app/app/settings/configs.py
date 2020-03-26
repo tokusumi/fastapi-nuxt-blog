@@ -1,3 +1,4 @@
+import boto3
 import os
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
@@ -12,3 +13,14 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 # require hashed_password columns
 USER_MODEL = User
+
+
+AWS_ACCESS_KEY_ID = os.environ['aws_access_key']
+AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
+AWS_BUCKET_NAME = os.environ['bucket_name']
+S3_URL = os.environ['s3_URL']
+
+aws_session = boto3.Session(
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+)

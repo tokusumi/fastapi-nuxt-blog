@@ -28,7 +28,7 @@
           <v-icon>mdi-dresser</v-icon>
         </v-btn>
 
-        <v-btn icon>
+        <v-btn icon to="/profile">
           <v-icon>mdi-heart</v-icon>
         </v-btn>
       </v-app-bar>

@@ -17,9 +17,10 @@ class UserDelete(UserBase):
     password: str
 
 
-class UserUpdate(UserBase):
-    hased_password: Optional[str] = None
-    is_active: Optional[bool] = None
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    icon: Optional[str] = None
 
 
 class User(UserBase):

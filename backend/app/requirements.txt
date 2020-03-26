@@ -4,6 +4,7 @@ alembic
 async-exit-stack 
 async-generator
 requests 
+boto3
 pytz
 pyjwt
 passlib[bcrypt]

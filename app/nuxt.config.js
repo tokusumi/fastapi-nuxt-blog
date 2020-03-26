@@ -33,7 +33,7 @@ export default {
     plugins: [
         {
             src: '@/plugins/vue-mavon-editor',
-            srr: false
+            // srr: false
         }
     ],
     /*

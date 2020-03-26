@@ -38,6 +38,14 @@ def create_user_query(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+def update_user(db: Session, base_user: models.User, user: schemas.UserUpdate):
+    is_update = base_user.update_dict(user.dict())
+    if is_update:
+        db.commit()
+        db.refresh(base_user)
+    return base_user, is_update
+
+
 def delete_user_query(db: Session, user: Session.query):
     db.delete(user)
     db.commit()
