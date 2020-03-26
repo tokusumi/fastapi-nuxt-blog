@@ -1,6 +1,14 @@
 <template>
   <v-form>
     <v-container fluid>
+      <file-upload
+        class="mr-4"
+        :endpoint="endpoint"
+        v-on:fileUploadEvent="changeMainImg"
+        v-on:fileSelectEvent="selectMainImg"
+      />
+      <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
+
       <v-text-field v-model="title" label="Title" required></v-text-field>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
@@ -34,7 +42,12 @@
   </v-form>
 </template>
 <script>
+import FileUpload from "@/components/FileUpload.vue";
 export default {
+  pageTitle: "PostUpdate",
+  components: {
+    FileUpload
+  },
   async asyncData({ app, query, error }) {
     let categories = await app.$axios.$get("/category/").catch(e => {
       return [];
@@ -60,8 +73,11 @@ export default {
     };
   },
   data: () => ({
+    endpoint: "/image/",
     title: "",
     body: "",
+    image: "",
+    mainImgUrl: "",
     select_tags: [],
     select_category: "",
     select_series: "",
@@ -111,15 +127,15 @@ export default {
         .$post("/post/", {
           title: this.title,
           body: this.body,
+          image: this.image,
           is_public: this.publish_switch,
           notification: this.notify_switch,
-          author_id: 1,
+          author_id: this.$auth.user.id,
           category: this.select_category,
           series: this.select_series,
           tags: this.select_tags
         })
         .then(res => {
-          console.log("success");
           this.clear();
           this.$router.push(`/detail/?id=${res.id}`);
         })
@@ -130,9 +146,22 @@ export default {
     clear() {
       this.title = "";
       this.body = "";
+      this.iamge = "";
+      this.mainImgUrl = "";
       this.select_tags = [];
       this.select_category = "";
       this.select_series = "";
+    },
+    selectMainImg(resCode, target) {
+      let reader = new FileReader();
+      reader.onload = e => {
+        this.mainImgUrl = e.target.result;
+      };
+      reader.readAsDataURL(target.files[0]);
+    },
+    changeMainImg(resCode, data) {
+      this.mainImgUrl = data.image;
+      this.image = data.image;
     },
     imgAdd(pos, $file) {
       let formData = new FormData();
