@@ -10,6 +10,7 @@
             </v-avatar>
             <file-upload
               class="mr-4"
+              :endpoint="endpoint"
               v-on:fileUploadEvent="changeAvatar"
               v-on:fileSelectEvent="selectAvatar"
             />
@@ -43,7 +44,8 @@ export default {
         userName: this.$auth.user.username,
         contactEmail: this.$auth.user.email
       },
-      avatarUrl: this.$auth.user.icon
+      avatarUrl: this.$auth.user.icon,
+      endpoint: "/users/image/"
     };
   },
   methods: {
@@ -75,9 +77,9 @@ export default {
       };
       reader.readAsDataURL(target.files[0]);
     },
-    changeAvatar(resCode, url) {
-      this.avatarUrl = url;
-      this.form.imgUrl = url;
+    changeAvatar(resCode, data) {
+      this.avatarUrl = data.icon;
+      this.form.imgUrl = data.icon;
     },
     toView() {
       this.$router.push("/profile/");

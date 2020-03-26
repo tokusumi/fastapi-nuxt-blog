@@ -1,6 +1,14 @@
 <template>
   <v-form>
     <v-container fluid>
+      <file-upload
+        class="mr-4"
+        :endpoint="endpoint"
+        v-on:fileUploadEvent="changeMainImg"
+        v-on:fileSelectEvent="selectMainImg"
+      />
+      <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
+
       <v-text-field v-model="post.title" label="Title" required></v-text-field>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
@@ -34,7 +42,12 @@
   </v-form>
 </template>
 <script>
+import FileUpload from "@/components/FileUpload.vue";
 export default {
+  pageTitle: "PostUpdate",
+  components: {
+    FileUpload
+  },
   async asyncData({ app, query, error }) {
     const post = await app.$axios
       .$get(`/post/${query.id}/`)
@@ -43,6 +56,7 @@ export default {
           id: data.id,
           title: data.title,
           body: data.body,
+          image: data.image,
           select_tags: data.tags
             ? data.tags.map(x => {
                 return x.name;
@@ -58,6 +72,7 @@ export default {
         return {
           title: "",
           body: "",
+          image: "",
           select_tags: [],
           select_category: "",
           select_series: "",
@@ -86,10 +101,12 @@ export default {
       tags: tags.map(x => {
         return x.name;
       }),
-      src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
+      src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
+      mainImgUrl: post.image
     };
   },
   data: () => ({
+    endpoint: "/image/",
     isLoading: false,
     form: false,
     markdownOption: {
@@ -134,6 +151,7 @@ export default {
         .$put(`/post/${this.post.id}/`, {
           title: this.post.title,
           body: this.post.body,
+          image: this.post.image,
           is_public: this.post.publish_switch,
           notification: this.post.notify_switch,
           author_id: this.$auth.user.id,
@@ -142,7 +160,6 @@ export default {
           tags: this.post.select_tags
         })
         .then(res => {
-          console.log("success");
           this.clear();
           this.$router.push(`/detail/?id=${res.id}`);
         })
@@ -153,9 +170,22 @@ export default {
     clear() {
       this.post.title = "";
       this.post.body = "";
+      this.post.iamge = "";
+      this.mainImgUrl = "";
       this.post.select_tags = [];
       this.post.select_category = "";
       this.post.select_series = "";
+    },
+    selectMainImg(resCode, target) {
+      let reader = new FileReader();
+      reader.onload = e => {
+        this.mainImgUrl = e.target.result;
+      };
+      reader.readAsDataURL(target.files[0]);
+    },
+    changeMainImg(resCode, data) {
+      this.mainImgUrl = data.image;
+      this.post.image = data.image;
     },
     imgAdd(pos, $file) {
       let formData = new FormData();

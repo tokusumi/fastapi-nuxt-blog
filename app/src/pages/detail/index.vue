@@ -3,12 +3,7 @@
     <v-container fluid class="mx-auto" max-width="800">
       <v-row dense>
         <v-card width="100%">
-          <v-img
-            :src="src"
-            class="white--text align-end"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="300px"
-          >
+          <v-img :src="post.image" class="white--text align-end black" contain height="300px">
             <v-card-title v-text="post.title"></v-card-title>
           </v-img>
           <v-card-actions>

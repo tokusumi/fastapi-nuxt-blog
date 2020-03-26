@@ -17,6 +17,9 @@
  <script>
 export default {
   name: "FileUpload",
+  props: {
+    endpoint: ""
+  },
   data: () => ({
     isNotUploaded: true,
     photo: "",
@@ -37,13 +40,13 @@ export default {
       let formData = new FormData();
       formData.append("file", this.photo);
       this.$axios
-        .$post("/users/image/", formData, {
+        .$post(this.endpoint, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
         })
         .then(res => {
-          this.$emit("fileUploadEvent", 0, res.icon);
+          this.$emit("fileUploadEvent", 0, res);
         })
         .catch(errorMsg => {
           this.$emit("fileUploadEvent", -1, "");

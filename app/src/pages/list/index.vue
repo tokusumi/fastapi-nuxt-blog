@@ -4,15 +4,12 @@
       <v-row dense>
         <v-col v-for="card in cards" :key="card.title" :cols="6">
           <v-card>
-            <v-img
-              :src="src"
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="300px"
-            >
+            <v-img v-if="card.image" :src="card.image" class="white--text align-end" height="300px">
               <v-card-title v-text="card.title"></v-card-title>
             </v-img>
-
+            <v-img v-else :src="src" class="white--text align-end" height="300px">
+              <v-card-title v-text="card.title"></v-card-title>
+            </v-img>
             <v-card-actions>
               <v-avatar size="25">
                 <img v-if="card.author.icon" :src="card.author.icon" alt="Avatar" />

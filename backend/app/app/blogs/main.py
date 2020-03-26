@@ -74,7 +74,6 @@ def update_post(
     if _post.author_id != current_user.id:
         raise HTTPException(status_code=400, detail="must be modified by author")
     update_postID = utils.UpdateIDPost(db, post)
-    print(update_postID.to_items())
     if len(update_postID.to_items()) == 0:
         raise HTTPException(status_code=400, detail="no context")
 
