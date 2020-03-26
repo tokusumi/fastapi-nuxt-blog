@@ -2,7 +2,6 @@
   <v-card class="mx-auto" max-width="1000">
     <v-container fluid>
       <v-row dense>
-        <!-- <v-col v-for="card in cards" :key="card.title" :cols="card.flex"> -->
         <v-col v-for="card in cards" :key="card.title" :cols="6">
           <v-card>
             <v-img
@@ -15,6 +14,10 @@
             </v-img>
 
             <v-card-actions>
+              <v-avatar size="25">
+                <img v-if="card.author.icon" :src="card.author.icon" alt="Avatar" />
+                <v-icon v-else>mdi-emoticon</v-icon>
+              </v-avatar>
               <v-spacer></v-spacer>
 
               <v-btn text :to="'/detail/?id=' + card.id">Show...</v-btn>

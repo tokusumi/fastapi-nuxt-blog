@@ -19,7 +19,10 @@
             >Category > {{post.category.name}}</v-btn>
 
             <v-spacer></v-spacer>
-            <v-icon>mdi-emoticon</v-icon>
+            <v-avatar size="25">
+              <img v-if="post.author.icon" :src="post.author.icon" alt="Avatar" />
+              <v-icon v-else>mdi-emoticon</v-icon>
+            </v-avatar>
             <v-btn icon v-if="is_author" :to="update_path">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
@@ -56,7 +59,10 @@
         <v-list>
           <v-list-item v-for="comment in comments" :key="comment.id">
             <v-list-item-icon>
-              <v-icon>mdi-emoticon</v-icon>
+              <v-avatar size="25">
+                <img v-if="comment.author.icon" :src="comment.author.icon" alt="Avatar" />
+                <v-icon v-else>mdi-emoticon</v-icon>
+              </v-avatar>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title v-text="comment.body"></v-list-item-title>
