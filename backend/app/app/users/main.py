@@ -74,12 +74,11 @@ async def read_users_me(current_user: schemas.User = Depends(get_current_active_
     return current_user
 
 
-@app.post("/users/image/", response_model=schemas.SuccessSchema)
+@app.post("/users/image/", response_model=schemas.User)
 async def add_icon(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: schemas.User = Depends(get_current_active_user),
 ):
-    await process_image.save_and_add_icon(file, current_user.id, db)
-
-    return {"result": True}
+    new_user = await process_image.save_and_add_icon(file, current_user.id, db)
+    return new_user
