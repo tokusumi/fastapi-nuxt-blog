@@ -13,26 +13,28 @@
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
           <v-select v-model="post.select_category" :items="categories" label="Category" dense></v-select>
+          <add-dialog :endpoint="categoryEndpoint" field="category" v-on:new="reflesh"></add-dialog>
         </v-col>
 
         <v-col class="d-flex" cols="12" sm="6">
           <v-select v-model="post.select_series" :items="serieses" label="Series" dense></v-select>
+          <add-dialog :endpoint="seriesEndpoint" field="series" v-on:new="reflesh"></add-dialog>
         </v-col>
-        <v-col cols="12" sm="12">
+        <v-col class="d-flex" cols="12" sm="12">
           <v-select v-model="post.select_tags" :items="tags" label="Select tags" multiple chips></v-select>
+          <add-dialog :endpoint="tagEndpoint" field="tag" v-on:new="reflesh"></add-dialog>
         </v-col>
       </v-row>
-      <div class="mavonEditor">
-        <no-ssr>
-          <mavon-editor
-            ref="md"
-            v-model="post.body"
-            :toolbars="markdownOption"
-            :language="'ja'"
-            @imgAdd="imgAdd"
-          />
-        </no-ssr>
-      </div>
+      <no-ssr>
+        <mavon-editor
+          class="mavonEditor"
+          ref="md"
+          v-model="post.body"
+          :toolbars="markdownOption"
+          :language="'ja'"
+          @imgAdd="imgAdd"
+        />
+      </no-ssr>
       <v-switch v-model="post.notify_switch" :label="`${notifyMessage()}`"></v-switch>
       <v-switch v-model="post.publish_switch" :label="`${publishMessage()}`"></v-switch>
     </v-container>
@@ -43,10 +45,12 @@
 </template>
 <script>
 import FileUpload from "@/components/FileUpload.vue";
+import AddDialog from "@/components/AddDialog.vue";
 export default {
   pageTitle: "PostUpdate",
   components: {
-    FileUpload
+    FileUpload,
+    AddDialog
   },
   async asyncData({ app, query, error }) {
     const post = await app.$axios
@@ -80,27 +84,28 @@ export default {
           publish_switch: false
         };
       });
-    let categories = await app.$axios.$get("/category/").catch(e => {
-      return [];
-    });
-    const serieses = await app.$axios.$get("/series/").catch(e => {
-      return [];
-    });
-    const tags = await app.$axios.$get("/tag/").catch(e => {
-      return [];
-    });
+    const getValue = async function(endpoint, axios) {
+      const values = await axios
+        .$get(endpoint)
+        .then(res => {
+          return res.map(x => {
+            return x.name;
+          });
+        })
+        .catch(e => {
+          return [];
+        });
+      return values;
+    };
 
     return {
       post: post,
-      categories: categories.map(x => {
-        return x.name;
-      }),
-      serieses: serieses.map(x => {
-        return x.name;
-      }),
-      tags: tags.map(x => {
-        return x.name;
-      }),
+      categoryEndpoint: "/category/",
+      seriesEndpoint: "/series/",
+      tagEndpoint: "/tag/",
+      categories: await getValue("/category/", app.$axios),
+      serieses: await getValue("/series/", app.$axios),
+      tags: await getValue("/tag/", app.$axios),
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
       mainImgUrl: post.image
     };
@@ -132,6 +137,19 @@ export default {
     }
   }),
   methods: {
+    async getValue(endpoint, axios) {
+      const out = await axios
+        .$get(endpoint)
+        .then(res => {
+          return res.map(x => {
+            return x.name;
+          });
+        })
+        .catch(e => {
+          return [];
+        });
+      return out;
+    },
     notifyMessage() {
       if (this.post.notify_switch === true) {
         return "notify: send email";
@@ -176,6 +194,19 @@ export default {
       this.post.select_category = "";
       this.post.select_series = "";
     },
+    async reflesh(endpoint) {
+      switch (endpoint) {
+        case this.categoryEndpoint:
+          this.categories = await this.getValue(endpoint, this.$axios);
+          break;
+        case this.seriesEndpoint:
+          this.serieses = await this.getValue(endpoint, this.$axios);
+          break;
+        case this.tagEndpoint:
+          this.tags = await this.getValue(endpoint, this.$axios);
+          break;
+      }
+    },
     selectMainImg(resCode, target) {
       let reader = new FileReader();
       reader.onload = e => {
@@ -211,5 +242,6 @@ export default {
 .mavonEditor {
   width: 100%;
   height: "500px";
+  z-index: 5 !important;
 }
 </style>
