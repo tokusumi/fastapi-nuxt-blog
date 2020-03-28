@@ -23,9 +23,9 @@
             </v-btn>
           </v-card-actions>
           <v-list>
-            <v-lsit-item v-for="tag in post.tags" :key="tag.id">
+            <v-list-item v-for="tag in post.tags" :key="tag.id">
               <v-btn text :to="'/list/?tag=' + tag.name">{{tag.name}}</v-btn>
-            </v-lsit-item>
+            </v-list-item>
           </v-list>
           <v-card-text>
             <no-ssr>

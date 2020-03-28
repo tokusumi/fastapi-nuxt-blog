@@ -5,59 +5,19 @@
         <v-toolbar-title>Posts</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-select
-                      v-model="editedItem.category.name"
-                      :items="categories"
-                      label="Calories"
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-select v-model="editedItem.series.name" :items="serieses" label="Series"></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="8">
-                    <v-select
-                      v-model="editedItem.tag.name"
-                      :items="tags"
-                      label="Tags"
-                      multiple
-                      chips
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="3">
-                    <v-switch v-model="editedItem.is_public" :label="`${publishMessage()}`"></v-switch>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <v-btn color="primary" dark class="mb-2" to="/post/">New Item</v-btn>
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon small class="mr-2" @click="showItem(item)">mdi-book-open-variant</v-icon>
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+      <edit-item
+        :item="item"
+        :categories="categories"
+        :serieses="serieses"
+        :tags="tags"
+        v-on:editPost="reload"
+        v-on:newProps="reflesh"
+      ></edit-item>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
@@ -66,34 +26,46 @@
   </v-data-table>
 </template>
 <script>
+import EditItem from "@/components/EditItem.vue";
 export default {
+  pageTitle: "Dashboard",
+  components: {
+    EditItem
+  },
   async asyncData({ app }) {
     const data = await app.$axios.$get("/post/");
-    let categories = await app.$axios.$get("/category/").catch(e => {
-      return [];
+    const posts = data.data.map(x => {
+      x.category = x.category ? x.category.name || "" : "";
+      x.series = x.series ? x.series.name || "" : "";
+      x.tags = x.tags.map(tag => {
+        return tag.name;
+      });
+      return x;
     });
-    const serieses = await app.$axios.$get("/series/").catch(e => {
-      return [];
-    });
-    const tags = await app.$axios.$get("/tag/").catch(e => {
-      return [];
-    });
-
+    const getValue = async function(endpoint, axios) {
+      const values = await axios
+        .$get(endpoint)
+        .then(res => {
+          return res.map(x => {
+            return x.name;
+          });
+        })
+        .catch(e => {
+          return [];
+        });
+      return values;
+    };
     return {
-      posts: data.data,
-      categories: categories.map(x => {
-        return x.name;
-      }),
-      serieses: serieses.map(x => {
-        return x.name;
-      }),
-      tags: tags.map(x => {
-        return x.name;
-      })
+      posts: posts,
+      categoryEndpoint: "/category/",
+      seriesEndpoint: "/series/",
+      tagEndpoint: "/tag/",
+      categories: await getValue("/category/", app.$axios),
+      serieses: await getValue("/series/", app.$axios),
+      tags: await getValue("/tag/", app.$axios)
     };
   },
   data: () => ({
-    dialog: false,
     headers: [
       { text: "Created at", value: "created_at" },
       {
@@ -103,49 +75,36 @@ export default {
         value: "title"
       },
       { text: "Author", value: "author.username" },
-      { text: "Category", value: "category.name" },
-      { text: "Series", value: "series.name" },
-      { text: "Tags", value: "tag.name" },
+      { text: "Category", value: "category" },
+      { text: "Series", value: "series" },
+      { text: "Tags", value: "tags" },
       { text: "Is public", value: "is_public" },
       { text: "Actions", value: "actions", sortable: false }
-    ],
-    posts: [],
-    editedIndex: -1,
-    editedItem: {
-      title: "",
-      category: "",
-      series: "",
-      tag: "",
-      created_at: ""
-    },
-    defaultItem: {
-      title: "",
-      category: "",
-      series: "",
-      tag: "",
-      created_at: ""
-    }
+    ]
   }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
-  },
-
-  created() {
-    this.initialize();
-  },
-
   methods: {
     initialize() {
       this.sendGetPost();
+    },
+    getTags(tags) {
+      return length(tags) > 0
+        ? tags.map(x => {
+            return x.name;
+          })
+        : [];
+    },
+    async getValue(endpoint, axios) {
+      const out = await axios
+        .$get(endpoint)
+        .then(res => {
+          return res.map(x => {
+            return x.name;
+          });
+        })
+        .catch(e => {
+          return [];
+        });
+      return out;
     },
     showItem(item) {
       this.$router.push(`/detail/?id=${item.id}`);
@@ -162,44 +121,42 @@ export default {
         this.sendDeletePost(this.posts[index].id);
       this.initialize();
     },
-
-    close() {
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.posts[this.editedIndex], this.editedItem);
-      } else {
-        this.posts.push(this.editedItem);
-      }
-      this.close();
-    },
-    publishMessage() {
-      if (this.editedItem.is_public === true) {
-        return "public";
-      } else {
-        return "private";
-      }
-    },
     async sendGetPost() {
       await this.$axios
         .$get("/post/")
         .then(res => {
-          this.posts = res.data;
+          this.posts = res.data.map(x => {
+            x.category = x.category ? x.category.name || "" : "";
+            x.series = x.series ? x.series.name || "" : "";
+            x.tags = x.tags.map(tag => {
+              return tag.name;
+            });
+            return x;
+          });
         })
         .catch(e => {});
     },
     async sendDeletePost(post_id) {
-      console.log(post_id);
       await this.$axios
         .$delete(`/post/${post_id}/`)
         .then(res => {})
         .catch(e => {});
+    },
+    reload() {
+      this.initialize();
+    },
+    async reflesh(endpoint) {
+      switch (endpoint) {
+        case this.categoryEndpoint:
+          this.categories = await this.getValue(endpoint, this.$axios);
+          break;
+        case this.seriesEndpoint:
+          this.serieses = await this.getValue(endpoint, this.$axios);
+          break;
+        case this.tagEndpoint:
+          this.tags = await this.getValue(endpoint, this.$axios);
+          break;
+      }
     }
   }
 };

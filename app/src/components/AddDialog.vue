@@ -48,10 +48,6 @@ export default {
           this.dialog = false;
           return false;
         });
-    },
-    clear() {
-      dialog = false;
-      value = "";
     }
   }
 };
