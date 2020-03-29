@@ -66,6 +66,7 @@ class Post(Base):
     category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
     category = relationship("Category", backref="posts")
     tag = relationship("Tag", secondary=lambda: post__tag, backref="posts")
+    public_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
     # updated_at = Column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     is_public = Column(Boolean, default=False)

@@ -67,7 +67,7 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "Created at", value: "created_at" },
+      { text: "public at", value: "public_at" },
       {
         text: "Title",
         align: "start",

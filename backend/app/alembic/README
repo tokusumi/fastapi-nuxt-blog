@@ -12,7 +12,7 @@ Then, modify env.py to define it by DATABASE_URL of environment variable.
 ## making migrations file
 
 ```bash
- ❯ docker-compose run --rm fastapi alembic revision --autogenerate -m "First migration"   [00:21:41]
+$ docker-compose run --rm fastapi alembic revision --autogenerate -m "First migration"
 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
 INFO  [alembic.autogenerate.compare] Detected added table 'category'
@@ -21,7 +21,7 @@ INFO  [alembic.autogenerate.compare] Detected added table 'category'
 
 ## migrate
 ```bash
- ❯ docker-compose run --rm fastapi alembic upgrade head                                   [00:42:22]
+$ docker-compose run --rm fastapi alembic upgrade head
 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
 INFO  [alembic.runtime.migration] Running upgrade  -> 90fa92c4f9f5, First migration

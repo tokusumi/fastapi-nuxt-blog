@@ -8,8 +8,13 @@
         v-on:fileSelectEvent="selectMainImg"
       />
       <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
+      <v-col cols="12" sm="12" md="12">
+        <select-date :date="public_at" v-on:save="saveDate"></select-date>
+      </v-col>
+      <v-col cols="12" sm="12" md="12">
+        <v-text-field v-model="title" label="Title" required></v-text-field>
+      </v-col>
 
-      <v-text-field v-model="title" label="Title" required></v-text-field>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
           <v-select v-model="select_category" :items="categories" label="Category" dense></v-select>
@@ -46,11 +51,13 @@
 <script>
 import FileUpload from "@/components/FileUpload.vue";
 import AddDialog from "@/components/AddDialog.vue";
+import SelectDate from "@/components/SelectDate.vue";
 export default {
   pageTitle: "PostCreate",
   components: {
     FileUpload,
-    AddDialog
+    AddDialog,
+    SelectDate
   },
   async asyncData({ app, query, error }) {
     const getValue = async function(endpoint, axios) {
@@ -82,6 +89,7 @@ export default {
     body: "",
     image: "",
     mainImgUrl: "",
+    public_at: null,
     select_tags: [],
     select_category: "",
     select_series: "",
@@ -147,6 +155,7 @@ export default {
           image: this.image,
           is_public: this.publish_switch,
           notification: this.notify_switch,
+          public_at: this.public_at,
           author_id: this.$auth.user.id,
           category: this.select_category,
           series: this.select_series,
@@ -165,6 +174,7 @@ export default {
       this.body = "";
       this.iamge = "";
       this.mainImgUrl = "";
+      this.public_at = null;
       this.select_tags = [];
       this.select_category = "";
       this.select_series = "";
@@ -209,6 +219,9 @@ export default {
         .finally(() => {
           return false;
         });
+    },
+    saveDate(date) {
+      this.public_at = date;
     }
   }
 };

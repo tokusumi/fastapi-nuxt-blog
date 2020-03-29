@@ -54,6 +54,7 @@ class BasePost(BaseModel):
     body: str
     is_public: bool = False
     notification: bool = False
+    public_at: Optional[datetime] = None
 
 
 class CreatePost(BasePost):
@@ -75,6 +76,7 @@ class BaseUpdatePost(BaseModel):
     body: Optional[str] = None
     is_public: Optional[bool] = None
     notification: Optional[bool] = None
+    public_at: Optional[datetime] = None
 
 
 class UpdatePostReq(BaseUpdatePost):
@@ -95,6 +97,7 @@ class FilterPost(BaseModel):
     series: Optional[str] = None
     tags: Optional[List[str]] = None
     is_private: Optional[bool] = True
+    public_at: Optional[datetime] = None
 
 
 class Post(BasePost):
@@ -103,21 +106,10 @@ class Post(BasePost):
     category: Category = None
     series: Series = None
     tags: List[Tag] = None
-    # category: Optional[str] = None
-    # series: Optional[str] = None
-    # tags: Optional[List[str]] = None
+    created_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True
-
-    # def category(self):
-    #     return self.category.name
-
-    # def series(self):
-    #     return self.series.name
-
-    # def tags(self):
-    #     return [tag.name for tag in self.tags]
 
 
 class Posts(BaseModel):

@@ -12,6 +12,9 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
+              <select-date :date="post.public_at" v-on:save="saveDate"></select-date>
+            </v-col>
+            <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="post.title" label="Title"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
@@ -43,11 +46,12 @@
 </template>
 <script>
 import AddDialog from "@/components/AddDialog.vue";
-
+import SelectDate from "@/components/SelectDate.vue";
 export default {
   name: "EditItem",
   components: {
-    AddDialog
+    AddDialog,
+    SelectDate
   },
   props: {
     item: { type: Object },
@@ -63,6 +67,7 @@ export default {
       title: "",
       is_public: false,
       notification: false,
+      public_at: null,
       category: "",
       series: "",
       tags: []
@@ -78,6 +83,7 @@ export default {
         title: this.item.title,
         is_public: this.item.is_public,
         notification: this.item.notification,
+        public_at: this.item.public_at,
         category: this.item.category,
         series: this.item.series,
         tags: this.item.tags
@@ -96,6 +102,9 @@ export default {
       } else {
         return "private: you can only read this.";
       }
+    },
+    saveDate(date) {
+      this.post.public_at = date;
     },
     reflesh(endpoint) {
       this.$emit("newProps", endpoint);

@@ -8,8 +8,12 @@
         v-on:fileSelectEvent="selectMainImg"
       />
       <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
-
-      <v-text-field v-model="post.title" label="Title" required></v-text-field>
+      <v-col cols="12" sm="12" md="12">
+        <select-date :date="post.public_at" v-on:save="saveDate"></select-date>
+      </v-col>
+      <v-col cols="12" sm="12" md="12">
+        <v-text-field v-model="post.title" label="Title" required></v-text-field>
+      </v-col>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
           <v-select v-model="post.select_category" :items="categories" label="Category" dense></v-select>
@@ -46,11 +50,13 @@
 <script>
 import FileUpload from "@/components/FileUpload.vue";
 import AddDialog from "@/components/AddDialog.vue";
+import SelectDate from "@/components/SelectDate.vue";
 export default {
   pageTitle: "PostUpdate",
   components: {
     FileUpload,
-    AddDialog
+    AddDialog,
+    SelectDate
   },
   async asyncData({ app, query, error }) {
     const post = await app.$axios
@@ -61,6 +67,7 @@ export default {
           title: data.title,
           body: data.body,
           image: data.image,
+          public_at: data.public_at,
           select_tags: data.tags
             ? data.tags.map(x => {
                 return x.name;
@@ -77,6 +84,7 @@ export default {
           title: "",
           body: "",
           image: "",
+          public_at: null,
           select_tags: [],
           select_category: "",
           select_series: "",
@@ -172,6 +180,7 @@ export default {
           image: this.post.image,
           is_public: this.post.publish_switch,
           notification: this.post.notify_switch,
+          public_at: this.post.public_at,
           author_id: this.$auth.user.id,
           category: this.post.select_category,
           series: this.post.select_series,
@@ -190,6 +199,7 @@ export default {
       this.post.body = "";
       this.post.iamge = "";
       this.mainImgUrl = "";
+      this.post.public_at = null;
       this.post.select_tags = [];
       this.post.select_category = "";
       this.post.select_series = "";
@@ -234,6 +244,9 @@ export default {
         .finally(() => {
           return false;
         });
+    },
+    saveDate(date) {
+      this.post.public_at = date;
     }
   }
 };
