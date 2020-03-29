@@ -44,13 +44,14 @@ export default {
   },
   methods: {
     userLogin() {
+      let formData = new FormData();
+      formData.append("username", this.login.username);
+      formData.append("password", this.login.password);
       try {
         this.$auth
-          .loginWith("local", { data: this.login })
+          .loginWith("local", { data: formData })
           .then(res => {
             console.log("success");
-            console.log(this.$auth.loggedIn);
-            console.log(this.$auth.user);
           })
           .catch(err => {
             console.log(err);

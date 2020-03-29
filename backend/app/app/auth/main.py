@@ -32,8 +32,8 @@ def get_token_data(user, token_schema):
 
 @app.post("/auth/token", response_model=schemas.Token)
 async def login_for_access_token(
-    # form_data: OAuth2PasswordRequestForm = Depends(),
-    form_data: schemas.FormData,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    # form_data: schemas.FormData,
     db: Session = Depends(get_db),
 ):
     user = get_authenticated_user(db, form_data.username, form_data.password)
