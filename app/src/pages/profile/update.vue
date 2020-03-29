@@ -19,9 +19,9 @@
           <v-text-field v-model="form.contactEmail" label="Email Address"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click.native="toView">Reset Changes</v-btn>
-          <v-btn color="primary" :loading="loading" @click.native="submit">
-            <v-icon left dark>mdi-check</v-icon>Save Changes
+          <v-btn @click.native="toView">Reset</v-btn>
+          <v-btn color="teal lighten-1" :loading="loading" @click.native="submit">
+            <v-icon left dark>mdi-check</v-icon>Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     async submit() {
+      this.loading = true;
       await this.$axios
         .$put(`/users/`, {
           icon: this.form.imgUrl,
@@ -61,6 +62,9 @@ export default {
         })
         .catch(e => {
           console.log(e);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     clear(user) {

@@ -8,7 +8,7 @@
               <img v-if="form.imgUrl" :src="form.imgUrl" alt="Avatar" />
               <v-icon v-else size="96">mdi-account</v-icon>
             </v-avatar>
-            <v-btn color="primary" @click.native="toUpdate">Change profile</v-btn>
+            <v-btn class="teal lighten-1" @click.native="toUpdate">Change profile</v-btn>
           </v-flex>
           <v-text-field v-model="form.userName" label="Username" readonly></v-text-field>
           <v-text-field v-model="form.contactEmail" label="Email Address" readonly></v-text-field>

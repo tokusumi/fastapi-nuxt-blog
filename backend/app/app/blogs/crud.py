@@ -13,7 +13,7 @@ def _create(db: Session, instance):
 
 def get_category_query(db: Session, skip: int = 0, limit: int = 100):
     """get category list"""
-    return db.query(models.Category).offset(skip).limit(limit).all()
+    return db.query(models.Category).order_by(models.Category.id.desc()).offset(skip).limit(limit).all()
 
 
 def get_category(db: Session, name: str):
@@ -29,7 +29,7 @@ def create_category(db: Session, args: schemas.CreateCategory):
 
 def get_series_query(db: Session, skip: int = 0, limit: int = 100):
     """get series list"""
-    return db.query(models.Series).offset(skip).limit(limit).all()
+    return db.query(models.Series).order_by(models.Series.id.desc()).offset(skip).limit(limit).all()
 
 
 def get_series(db: Session, name: str):
@@ -45,7 +45,7 @@ def create_series(db: Session, args: schemas.CreateSeries):
 
 def get_tag_query(db: Session, skip: int = 0, limit: int = 100):
     """get tag list"""
-    return db.query(models.Tag).offset(skip).limit(limit).all()
+    return db.query(models.Tag).order_by(models.Tag.id.desc()).offset(skip).limit(limit).all()
 
 
 def get_tag(db: Session, name: str):
@@ -116,9 +116,10 @@ def get_post_query(
     db = filter_post_by_category(db, category_id) if category_id is not None else db
     db = filter_post_by_series(db, series_id) if series_id is not None else db
     db = filter_post_by_tags(db, tag_ids) if tag_ids is not None else db
-    max_page = ceil(db.count() / limit)
-    query = db.offset(skip).limit(limit).all()
-    return query, max_page
+    total = db.count()
+    max_page = ceil(total / limit)
+    query = db.order_by(models.Post.id.desc()).offset(skip).limit(limit).all()
+    return query, max_page, total
 
 
 def create_post(db: Session, post: schemas.CreatePost):

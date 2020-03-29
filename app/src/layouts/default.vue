@@ -1,6 +1,6 @@
 <template>
   <v-app white>
-    <v-card color="grey lighten-4" flat height="200px" tile>
+    <v-card color="grey lighten-4" flat height="50px" tile>
       <v-navigation-drawer v-model="leftDrawer" :left="left" temporary fixed>
         <v-list>
           <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>

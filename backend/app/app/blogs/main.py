@@ -31,12 +31,12 @@ def get_post(
         is_private=is_private,
     )
     filtering_dict = utils.FilterIDPost(db, filtering).to_items() if filtering else {}
-    query, max_page = crud.get_post_query(
+    query, max_page, total = crud.get_post_query(
         db, skip=skip, limit=limit, is_private=filtering.is_private, **filtering_dict
     )
     if len(query) == 0:
         raise HTTPException(status_code=400, detail="Post does not exist")
-    return {"data": query, "max_page": max_page}
+    return {"data": query, "max_page": max_page, "total": total}
 
 
 @app.get("/post/{post_id}/", response_model=schemas.Post, tags=["post"])

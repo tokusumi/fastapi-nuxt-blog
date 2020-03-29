@@ -6,9 +6,10 @@
         Select
         <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
-      <v-btn v-else class="upload-button" color="indigo" @click="uploadImage">
+      <v-btn v-else class="upload-button" color="teal lighten-1" @click="uploadImage">
         Upload
-        <v-icon right color="white">mdi-cloud-upload</v-icon>
+        <v-progress-circular v-if="loading" size="24" :indeterminate="loading"></v-progress-circular>
+        <v-icon v-else right color="white">mdi-cloud-upload</v-icon>
       </v-btn>
     </v-layout>
   </v-container>
@@ -23,7 +24,8 @@ export default {
   data: () => ({
     isNotUploaded: true,
     photo: "",
-    photoName: ""
+    photoName: "",
+    loading: false
   }),
   methods: {
     selectImage() {

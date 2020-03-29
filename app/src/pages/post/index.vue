@@ -40,12 +40,12 @@
           @imgAdd="imgAdd"
         />
       </no-ssr>
-      <v-switch v-model="notify_switch" :label="`${notifyMessage()}`"></v-switch>
-      <v-switch v-model="publish_switch" :label="`${publishMessage()}`"></v-switch>
+      <v-switch color="teal lighten-1" v-model="notify_switch" :label="`${notifyMessage()}`"></v-switch>
+      <v-switch color="teal lighten-1" v-model="publish_switch" :label="`${publishMessage()}`"></v-switch>
     </v-container>
     <v-divider></v-divider>
     <v-btn @click="clear">Clear</v-btn>
-    <v-btn class="mr-4" @click="submit">Submit</v-btn>
+    <v-btn class="mr-4" color="teal lighten-1" :loading="loading" @click="submit">Submit</v-btn>
   </v-form>
 </template>
 <script>
@@ -95,7 +95,7 @@ export default {
     select_series: "",
     notify_switch: true,
     publish_switch: false,
-    isLoading: false,
+    loading: false,
     form: false,
     markdownOption: {
       bold: true,
@@ -111,9 +111,9 @@ export default {
       ul: true,
       link: true,
       imagelink: true,
-      code: true,
+      code: false,
       table: true,
-      fullscreen: true,
+      fullscreen: false,
       readmodel: true,
       htmlcode: true,
       help: true
@@ -148,6 +148,7 @@ export default {
       }
     },
     async submit() {
+      this.loading = true;
       await this.$axios
         .$post("/post/", {
           title: this.title,
@@ -167,6 +168,9 @@ export default {
         })
         .catch(e => {
           console.log(e);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     clear() {
@@ -230,6 +234,6 @@ export default {
 .mavonEditor {
   width: 100%;
   height: "500px";
-  z-index: 5 !important;
+  z-index: 2 !important;
 }
 </style>

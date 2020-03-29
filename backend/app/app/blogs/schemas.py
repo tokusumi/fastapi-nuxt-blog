@@ -49,9 +49,9 @@ class Tag(BaseModel):
 
 
 class BasePost(BaseModel):
-    title: str
+    title: str = ""
     image: str = ""
-    body: str
+    body: Optional[str] = None
     is_public: bool = False
     notification: bool = False
     public_at: Optional[datetime] = None
@@ -115,6 +115,7 @@ class Post(BasePost):
 class Posts(BaseModel):
     data: List[Post]
     max_page: int
+    total: int
 
 
 class BaseComment(BaseModel):

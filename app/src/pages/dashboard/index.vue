@@ -1,11 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="posts" sort-by="created_by" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="posts"
+    :server-items-length="total"
+    :options.sync="options"
+    :loading="loading"
+    sort-by="created_by"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>Posts</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-btn color="primary" dark class="mb-2" to="/post/">New Item</v-btn>
+        <v-btn color="teal lighten-1" :loading="loading" dark class="mb-2" to="/post/">New Item</v-btn>
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -57,6 +65,7 @@ export default {
     };
     return {
       posts: posts,
+      total: data.total,
       categoryEndpoint: "/category/",
       seriesEndpoint: "/series/",
       tagEndpoint: "/tag/",
@@ -66,6 +75,8 @@ export default {
     };
   },
   data: () => ({
+    loading: false,
+    options: {},
     headers: [
       { text: "public at", value: "public_at" },
       {
@@ -82,6 +93,14 @@ export default {
       { text: "Actions", value: "actions", sortable: false }
     ]
   }),
+  watch: {
+    options: {
+      handler() {
+        this.sendGetPost();
+      },
+      deep: true
+    }
+  },
   methods: {
     initialize() {
       this.sendGetPost();
@@ -122,9 +141,11 @@ export default {
       this.initialize();
     },
     async sendGetPost() {
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
       await this.$axios
-        .$get("/post/")
+        .$get("/post/", { params: { page: page, length: itemsPerPage } })
         .then(res => {
+          this.total = res.total;
           this.posts = res.data.map(x => {
             x.category = x.category ? x.category.name || "" : "";
             x.series = x.series ? x.series.name || "" : "";

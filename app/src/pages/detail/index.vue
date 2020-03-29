@@ -4,7 +4,7 @@
       <v-row dense>
         <v-card width="100%">
           <v-img :src="post.image" class="white--text align-end black" contain height="300px">
-            <v-card-title v-text="post.title"></v-card-title>
+            <v-card-title class="teal lighten-1" v-text="post.title"></v-card-title>
           </v-img>
           <v-card-actions>
             <v-btn
@@ -12,7 +12,8 @@
               v-if="post.category"
               :to="'/list/?category=' + post.category.name"
             >Category > {{post.category.name}}</v-btn>
-
+            <v-icon small>mdi-clock</v-icon>
+            {{ public_at_or_none }}
             <v-spacer></v-spacer>
             <v-avatar size="25">
               <img v-if="post.author.icon" :src="post.author.icon" alt="Avatar" />
@@ -30,6 +31,7 @@
           <v-card-text>
             <no-ssr>
               <mavon-editor
+                class="mavonViewer"
                 v-model="post.body"
                 defaultOpen="preview"
                 :toolbarsFlag="false"
@@ -40,9 +42,6 @@
               />
             </no-ssr>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-          </v-card-actions>
         </v-card>
       </v-row>
     </v-container>
@@ -144,6 +143,13 @@ export default {
   computed: {
     icon() {
       return this.icons[this.iconIndex];
+    },
+    public_at_or_none() {
+      if (typeof this.post.public_at === "str") {
+        return this.post.public_at.sub_str(0, 10);
+      } else {
+        return "None";
+      }
     }
   },
 
@@ -182,3 +188,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+.mavonViewer {
+  min-width: 0;
+  z-index: 2 !important;
+}
+</style>

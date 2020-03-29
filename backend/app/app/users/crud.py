@@ -24,7 +24,7 @@ def get_user_by_password_query(db: Session, email: str, password: str):
 
 def get_users_query(db: Session, skip: int = 0, limit: int = 100):
     """get user list"""
-    return db.query(models.User).offset(skip).limit(limit).all()
+    return db.query(models.User).order_by(models.User.id.desc()).offset(skip).limit(limit).all()
 
 
 def create_user_query(db: Session, user: schemas.UserCreate):

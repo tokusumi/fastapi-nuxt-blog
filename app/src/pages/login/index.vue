@@ -18,7 +18,6 @@
           ></v-text-field>
         </v-container>
         <v-card-actions>
-          <v-btn to="/register">Register</v-btn>
           <v-btn class="mr-4" @click="userLogin">Login</v-btn>
         </v-card-actions>
       </v-form>
