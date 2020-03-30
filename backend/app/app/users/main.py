@@ -35,7 +35,11 @@ def read_users(
 
 
 @app.post("/users/", response_model=schemas.User, tags=["user"])
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def create_user(
+    user: schemas.UserCreate,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user),
+):
     db_user = get_user_by_email_query(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
