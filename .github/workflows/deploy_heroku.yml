@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  backend-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run backend branch
+      run: |
+        git filter-branch --subdirectory-filter backend/app -- --all
+
+    - uses: akhileshns/heroku-deploy@v3.0.0
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_API_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
