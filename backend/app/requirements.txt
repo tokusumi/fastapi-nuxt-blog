@@ -11,6 +11,7 @@ passlib[bcrypt]
 python-multipart
 pillow
 gunicorn
+uvicorn
 psycopg2
 pytest
 pytest-cov
