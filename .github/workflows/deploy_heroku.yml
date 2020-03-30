@@ -2,12 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [ test/action ]
-  pull_request:
     branches: [ master ]
 
 jobs:
-  backend:
+  backend-deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
