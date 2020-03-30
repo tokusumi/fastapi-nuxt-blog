@@ -34,7 +34,7 @@
   </v-data-table>
 </template>
 <script>
-import EditItem from "@/components/EditItem.vue";
+import EditItem from "~/components/EditItem.vue";
 export default {
   pageTitle: "Dashboard",
   components: {

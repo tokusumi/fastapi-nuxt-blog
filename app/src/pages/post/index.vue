@@ -49,9 +49,9 @@
   </v-form>
 </template>
 <script>
-import FileUpload from "@/components/FileUpload.vue";
-import AddDialog from "@/components/AddDialog.vue";
-import SelectDate from "@/components/SelectDate.vue";
+import FileUpload from "~/components/FileUpload.vue";
+import AddDialog from "~/components/AddDialog.vue";
+import SelectDate from "~/components/SelectDate.vue";
 export default {
   pageTitle: "PostCreate",
   components: {
