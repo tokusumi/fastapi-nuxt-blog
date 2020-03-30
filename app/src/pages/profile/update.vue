@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import FileUpload from "@/components/FileUpload.vue";
+import FileUpload from "~/components/FileUpload.vue";
 export default {
   pageTitle: "Profile",
   components: {
