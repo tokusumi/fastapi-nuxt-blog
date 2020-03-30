@@ -11,8 +11,6 @@ services:
         - "3000:3000"
     environment:
         HOST: 0.0.0.0
-        API_URL: http://fastapi:80/
-        API_URL_BROWSER: http://localhost:80/
 
   fastapi:
     build: ./backend

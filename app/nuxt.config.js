@@ -1,3 +1,4 @@
+require('dotenv').config()
 import colors from 'vuetify/es5/util/colors'
 
 export default {
@@ -48,10 +49,12 @@ export default {
     modules: [
         '@nuxtjs/axios',
         '@nuxtjs/auth',
+        ['@nuxtjs/dotenv', { filename: process.env.NODE_ENV !== 'production' ? "./configs/.env.dev" : "./configs/.env.prod" }
+        ],
     ],
     axios: {
-        baseURL: 'http://fastapi:80/',
-        browserBaseURL: 'http://localhost:80/',
+        baseURL: process.env.BASE_URL,
+        browserBaseURL: process.env.BROWSER_BASE_URL,
         // credentials: true
         // proxyHeaders: false
     },

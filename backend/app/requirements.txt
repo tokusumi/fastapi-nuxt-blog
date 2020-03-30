@@ -10,5 +10,7 @@ pyjwt
 passlib[bcrypt]
 python-multipart
 pillow
+gunicorn
+psycopg2
 pytest
 pytest-cov
