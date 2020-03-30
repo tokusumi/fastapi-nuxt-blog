@@ -17,6 +17,7 @@ jobs:
       run : |
         echo "BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
         echo "BROWSER_BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
+        git commit -am 'prod'
         
     - uses: akhileshns/heroku-deploy@v3.0.0
       with:
