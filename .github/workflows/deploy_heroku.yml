@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [ test/action ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run backend branch
+      run: |
+        git filter-branch --subdirectory-filter backend/app -- -- all && git commit -am 'f'
+        git remote add heroku ./
+        git ls-tree -r heroku --name-only
