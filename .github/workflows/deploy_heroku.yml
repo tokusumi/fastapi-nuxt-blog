@@ -14,6 +14,10 @@ jobs:
 
     - name: Run backend branch
       run: |
-        git filter-branch --subdirectory-filter backend/app -- -- all && git commit -am 'f'
-        git remote add heroku ./
-        git ls-tree -r heroku --name-only
+        git filter-branch --subdirectory-filter backend/app -- --all
+
+    - uses: akhileshns/heroku-deploy@v3.0.0
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_API_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
