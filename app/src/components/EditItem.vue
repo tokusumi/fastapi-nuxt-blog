@@ -45,8 +45,8 @@
   </v-dialog>
 </template>
 <script>
-import AddDialog from "@/components/AddDialog.vue";
-import SelectDate from "@/components/SelectDate.vue";
+import AddDialog from "~/components/AddDialog.vue";
+import SelectDate from "~/components/SelectDate.vue";
 export default {
   name: "EditItem",
   components: {
