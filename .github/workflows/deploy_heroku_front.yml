@@ -13,10 +13,10 @@ jobs:
     - name: Run frontend branch
       run: git filter-branch --subdirectory-filter app -- --all
         
-    - name: Add production environment variable
-      run : |
-        echo "BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
-        echo "BROWSER_BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
+    # - name: Add production environment variable
+    #   run : |
+    #     echo "BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
+    #     echo "BROWSER_BASE_URL='https://${{secrets.HEROKU_API_APP_NAME}}'.herokuapp.com/" >> ./src/configs/.env.prod
         
     - uses: akhileshns/heroku-deploy@v3.0.0
       with:
