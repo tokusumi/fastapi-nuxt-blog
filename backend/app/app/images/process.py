@@ -3,7 +3,6 @@ from PIL import Image
 from io import BytesIO
 import hashlib
 from datetime import datetime
-import boto3
 from fastapi import UploadFile
 from app.settings.configs import (
     AWS_BUCKET_NAME,
@@ -14,6 +13,14 @@ from app.settings.configs import (
 
 def hash_string(string: str) -> str:
     return hashlib.sha256(string.encode()).hexdigest()
+
+
+def hash_image_filename(image_filename: str, parent_path: str) -> str:
+    now = datetime.now().strftime("%Y/%m/%d")
+    base, ext = image_filename.rsplit('.', 1)
+    filename = hash_string(base) + '.' + ext
+    filename = '/'.join([parent_path, now, filename])
+    return filename
 
 
 async def mock_save_image(image_file: UploadFile, path: str):
@@ -29,9 +36,6 @@ async def mock_save_image(image_file: UploadFile, path: str):
 async def save_image(image_file: UploadFile, path: str):
     """save image from UploadFile into S3"""
     s3 = aws_session.resource('s3')
-    now = datetime.now().strftime("%Y/%m/%d")
-    base, ext = image_file.filename.rsplit('.', 1)
-    filename = hash_string(base) + '.' + ext
-    filename = '/'.join([path, now, filename])
+    filename = hash_image_filename(image_file.filename, path)
     s3.Bucket(AWS_BUCKET_NAME).put_object(Key=filename, Body=image_file.file)
     return S3_URL + filename

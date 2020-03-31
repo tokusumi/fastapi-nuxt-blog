@@ -16,3 +16,4 @@ uvicorn
 psycopg2
 pytest
 pytest-cov
+pytest-asyncio

@@ -1,8 +1,8 @@
 from starlette.testclient import TestClient
-from main import app
-from users.main import get_db
-from auth.authentications import get_current_active_user
-from auth import schemas as auth_schemas
+from app.main import app
+from app.users.main import get_db
+from app.auth.authentications import get_current_active_user
+from app.auth import schemas as auth_schemas
 
 client = TestClient(app)
 
@@ -14,7 +14,6 @@ def pytest_db(f):
     which is isolated all others testing and existing database.
     NOTE: must define SessionLocal fixture in conftest.py
     """
-
     def func(SessionLocal, *args, **kwargs):
         def override_get_db():
             try:
@@ -51,6 +50,7 @@ def test_create_user():
         "email": "foo1",
         "username": "fooo1",
         "is_active": True,
+        "icon": ""
     }
 
 
@@ -89,7 +89,7 @@ def test_get_user():
     response = client.get("/users/?limit=2")
     assert response.status_code == 200
     assert len(response.json()) == 2
-    assert response.json()[0]["email"] == "foo1"
+    assert response.json()[0]["email"] == "foo3"
 
 
 @pytest_db
@@ -114,4 +114,5 @@ def test_delete_user():
         "email": "foo2",
         "username": "fooo2",
         "is_active": True,
+        "icon": ""
     }

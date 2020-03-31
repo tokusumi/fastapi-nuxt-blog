@@ -1,7 +1,5 @@
-from typing import Optional
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
-import jwt
 from jwt import PyJWTError
 from app.users.crud import get_user_by_email_query
 from app.settings import configs as conf
