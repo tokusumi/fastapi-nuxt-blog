@@ -1,3 +1,5 @@
+![](https://github.com/tokusumi/fastapi-nuxt-blog/workflows/CI/badge.svg)
+
 # projects
 
 ## Get to start it
