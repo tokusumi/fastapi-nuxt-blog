@@ -1,7 +1,7 @@
 from math import ceil
 from typing import Optional, List
 from sqlalchemy.orm import Session
-from app.blogs import models, schemas
+from app.blogs import models, schemas, utils
 
 
 def _create(db: Session, instance):
@@ -132,14 +132,23 @@ def create_post(db: Session, post: schemas.CreatePost):
     return instance
 
 
-def update_post(db: Session, base_post: models.Post, post: schemas.UpdatePost):
+def get_tags(db: Session, tag_ids: List[int]) -> List[models.Tag]:
+    tags = []
+    for tag_id in tag_ids:
+        tag = get_tag_by_id(db, tag_id)
+        if tag:
+            tags.append(tag)
+        else:
+            raise KeyError('some tag id is invalid')
+    return tags
+
+
+def update_post(db: Session, base_post: models.Post, post: utils.UpdateIDPost):
     base_post.update_dict(post.to_items())
 
-    if post.tag_ids:
-        for tag_id in post.tag_ids:
-            tag = get_tag_by_id(db, tag_id)
-            if tag:
-                base_post.tag.append(tag)
+    if post.tag_ids is not None:
+        base_post.tag = get_tags(db, post.tag_ids)
+
     db.commit()
     db.refresh(base_post)
     return base_post

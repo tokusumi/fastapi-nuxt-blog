@@ -1,8 +1,8 @@
 from starlette.testclient import TestClient
-from main import app
-from db.session import get_db
-from auth.authentications import get_current_active_user
-from auth import schemas as auth_schemas
+from app.main import app
+from app.db.session import get_db
+from app.auth.authentications import get_current_active_user
+from app.auth import schemas as auth_schemas
 
 client = TestClient(app)
 
@@ -74,7 +74,6 @@ def test_get_post():
     user = client.post(
         "/users/", json={"email": "foo", "username": "fooo", "password": "fo"}
     )
-    user_id = user.json()["id"]
     assert user.status_code == 200
     category = client.post("/category/", json={"name": "cat"})
     category_name = category.json()["name"]
@@ -112,14 +111,14 @@ def test_get_post():
     response = client.get("/post/?page=1&length=2")
     assert response.status_code == 200
     assert len(response.json()['data']) == 2
-    assert response.json()['data'][0]["title"] == "1"
+    assert response.json()['data'][0]["title"] == "3"
     assert response.json()['max_page'] == 2
 
     # check page 2
     response = client.get("/post/?page=2&length=2")
     assert response.status_code == 200
     assert len(response.json()['data']) == 1
-    assert response.json()['data'][0]["title"] == "3"
+    assert response.json()['data'][0]["title"] == "1"
     assert response.json()['max_page'] == 2
 
     """filter"""

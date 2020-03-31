@@ -1,5 +1,5 @@
-from blogs import models, crud, schemas
-from users import crud as u_crud, schemas as u_schemas
+from app.blogs import models, crud, schemas, utils
+from app.users import crud as u_crud, schemas as u_schemas
 
 
 def test_create_post(SessionLocal):
@@ -24,6 +24,49 @@ def test_create_post(SessionLocal):
     assert post.category_id == category.id
     assert post.series_id == series.id
     assert post.tag[0] == tag
+    db.close()
+
+
+def test_update_post(SessionLocal):
+    db = SessionLocal()
+    user = u_crud.create_user_query(db, u_schemas.UserCreate(**{"email": "foo", "name": "fooo", "password": "fo"}))
+    category = crud.create_category(db, schemas.CreateCategory(**{"name": 'cat'}))
+    category2 = crud.create_category(db, schemas.CreateCategory(**{"name": 'cat2'}))
+    series = crud.create_series(db, schemas.CreateSeries(**{"name": 'ser'}))
+    tag = crud.create_tag(db, schemas.CreateTag(**{"name": 'tag'}))
+    tag2 = crud.create_tag(db, schemas.CreateTag(**{"name": 'tag2'}))
+
+    posts = {
+        'title': 'hoge',
+        'body': 'fuga',
+        'author_id': user.id,
+        'category_id': category.id,
+        'series_id': series.id,
+        'tag_ids': [tag.id],
+    }
+    post = crud.create_post(db, schemas.CreatePost(**posts))
+    assert post.title == 'hoge'
+    assert post.body == 'fuga'
+    assert post.author_id == user.id
+    assert post.category_id == category.id
+    assert post.series_id == series.id
+    assert post.tag[0] == tag
+
+    new_posts = {
+        'title': 'hoge2',
+        'body': 'fuga2',
+        'category': category2.name,
+        'tags': [tag2.name],
+    }
+    new_post = schemas.UpdatePostReq(**new_posts)
+    new_post = utils.UpdateIDPost(db, new_post)
+    updated_post = crud.update_post(db, base_post=post, post=new_post)
+    assert updated_post.title == 'hoge2'
+    assert updated_post.body == 'fuga2'
+    assert updated_post.author_id == user.id
+    assert updated_post.category_id == category2.id
+    assert updated_post.series_id == series.id
+    assert updated_post.tag[0] == tag2
     db.close()
 
 
