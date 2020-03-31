@@ -1,7 +1,7 @@
 name: Codecov
 on: 
   push:
-    branches: [ master, dev ]
+    branches: [ dev ]
   pull_request:
     branches: [ master, dev ]
     
@@ -22,6 +22,7 @@ jobs:
         pip install pytest
         pip install pytest-cov
         pip install pytest-asyncio
+        pip install -r requirements.txt
         pytest --cov=./app --cov-report=xml --disable-warnings
       working-directory: ${{env.working-directory}}
 

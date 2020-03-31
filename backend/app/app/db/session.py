@@ -2,7 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL')
+SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:////app/app/test.db')
 
 if SQLALCHEMY_DATABASE_URL.startswith('sqlite'):
     engine = create_engine(

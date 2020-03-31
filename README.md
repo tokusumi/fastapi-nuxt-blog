@@ -1,4 +1,5 @@
 ![](https://github.com/tokusumi/fastapi-nuxt-blog/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/tokusumi/fastapi-nuxt-blog/branch/master/graph/badge.svg?token=ZNO6VS2BWG)](https://codecov.io/gh/tokusumi/fastapi-nuxt-blog)
 
 # projects
 
