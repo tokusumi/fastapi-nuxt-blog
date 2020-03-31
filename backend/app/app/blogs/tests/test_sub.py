@@ -1,8 +1,9 @@
 from starlette.testclient import TestClient
-from main import app
-from db.session import get_db
-from auth.authentications import get_current_active_user
-from auth import schemas as auth_schemas
+from app.main import app
+from app.blogs import crud, schemas
+from app.db.session import get_db
+from app.auth.authentications import get_current_active_user
+from app.auth import schemas as auth_schemas
 
 client = TestClient(app)
 
@@ -75,7 +76,7 @@ def test_get_category():
     response = client.get("/category/?limit=2")
     assert response.status_code == 200
     assert len(response.json()) == 2
-    assert response.json()[0]["name"] == "cat1"
+    assert response.json()[0]["name"] == "cat3"
 
 
 @pytest_db
@@ -116,7 +117,7 @@ def test_get_series():
     response = client.get("/series/?limit=2")
     assert response.status_code == 200
     assert len(response.json()) == 2
-    assert response.json()[0]["name"] == "ser1"
+    assert response.json()[0]["name"] == "ser3"
 
 
 @pytest_db
@@ -157,4 +158,24 @@ def test_get_tag():
     response = client.get("/tag/?limit=2")
     assert response.status_code == 200
     assert len(response.json()) == 2
-    assert response.json()[0]["name"] == "tag1"
+    assert response.json()[0]["name"] == "tag3"
+
+
+def test_get_tags(SessionLocal):
+    db = SessionLocal()
+
+    crud.create_tag(db, schemas.CreateTag(**{'name': 'tag1'}))
+    crud.create_tag(db, schemas.CreateTag(**{'name': 'tag2'}))
+    crud.create_tag(db, schemas.CreateTag(**{'name': 'tag3'}))
+
+    res = crud.get_tags(db, [1, 2])
+    assert len(res) == 2
+
+    try:
+        exception = False
+        crud.get_tags(db, [4])
+    except KeyError:
+        exception = True
+    assert exception, 'Get Error tag id is invalid'
+
+    db.close()

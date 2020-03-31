@@ -7,7 +7,7 @@ from app.users.models import User
 SECRET_KEY = os.getenv("SECRET_KEY", "test")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRRE_KEY = "exp"
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 30
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('JWt_ACCESS_TOKEN_EXPIRE_MINUTES', 30)
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
@@ -15,10 +15,10 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/auth/token")
 USER_MODEL = User
 
 
-AWS_ACCESS_KEY_ID = os.environ['aws_access_key']
-AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
-AWS_BUCKET_NAME = os.environ['bucket_name']
-S3_URL = os.environ['s3_URL']
+AWS_ACCESS_KEY_ID = os.getenv('aws_access_key', '')
+AWS_SECRET_ACCESS_KEY = os.getenv('aws_secret_access_key', '')
+AWS_BUCKET_NAME = os.getenv('bucket_name', '')
+S3_URL = os.getenv('s3_URL', '')
 
 aws_session = boto3.Session(
     aws_access_key_id=AWS_ACCESS_KEY_ID,

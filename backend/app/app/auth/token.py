@@ -1,5 +1,4 @@
 import jwt
-from typing import Optional
 from datetime import datetime, timedelta
 import pytz
 from app.settings import configs as conf
@@ -14,9 +13,11 @@ def get_password_hash(password: str):
     return conf.PWD_CONTEXT.hash(password)
 
 
-def add_access_token(token_data: schemas.TokenData) -> bytes:
+def add_access_token(token_data: schemas.TokenData, expire_min=None) -> bytes:
     to_encode = token_data.dict()
-    expire = datetime.utcnow() + timedelta(minutes=conf.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+    if expire_min is None:
+        expire_min = conf.JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+    expire = datetime.utcnow() + timedelta(minutes=expire_min)
     to_encode.update({"exp": expire})
     data = schemas.TokenFullData(**to_encode)
     encoded_jwt = jwt.encode(data.dict(), conf.SECRET_KEY, algorithm=conf.JWT_ALGORITHM)
