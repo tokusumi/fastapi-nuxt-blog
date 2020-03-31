@@ -1,21 +1,31 @@
 <template>
-  <v-container fluid>
-    <v-layout column>
-      <v-card>
+  <v-app>
+    <v-container fluid>
+      <v-card class="mx-auto" max-width="400px">
+        <v-card-title>
+          <v-row>
+            <v-col class="d-flex" cols="12" xs="12" sm="6">
+              <v-row align="center" justify="center">
+                <v-avatar size="96" class="mr-4">
+                  <img v-if="form.imgUrl" :src="form.imgUrl" alt="Avatar" />
+                  <v-icon v-else size="96">mdi-account</v-icon>
+                </v-avatar>
+              </v-row>
+            </v-col>
+            <v-col class="d-flex" cols="12" xs="12" sm="6">
+              <v-row align="center" justify="left">
+                <v-btn class="teal lighten-1" @click.native="toUpdate">Change profile</v-btn>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-title>
         <v-card-text>
-          <v-flex class="mb-4">
-            <v-avatar size="96" class="mr-4">
-              <img v-if="form.imgUrl" :src="form.imgUrl" alt="Avatar" />
-              <v-icon v-else size="96">mdi-account</v-icon>
-            </v-avatar>
-            <v-btn class="teal lighten-1" @click.native="toUpdate">Change profile</v-btn>
-          </v-flex>
           <v-text-field v-model="form.userName" label="Username" readonly></v-text-field>
           <v-text-field v-model="form.contactEmail" label="Email Address" readonly></v-text-field>
         </v-card-text>
       </v-card>
-    </v-layout>
-  </v-container>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
