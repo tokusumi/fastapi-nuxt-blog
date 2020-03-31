@@ -55,7 +55,7 @@ export default {
   async asyncData({ app }) {
     const data = await app.$axios
       .$get("/post/?is_private=false", {
-        params: { page: 1, length: 4 }
+        params: { page: 1, length: 6 }
       })
       .then(data => {
         return data;
@@ -71,8 +71,8 @@ export default {
       cards: data.data,
       max_page: data.max_page,
       page: 1,
-      length: 4,
-      pagination_len: 6,
+      length: 6,
+      pagination_len: 8,
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
     };
   },
