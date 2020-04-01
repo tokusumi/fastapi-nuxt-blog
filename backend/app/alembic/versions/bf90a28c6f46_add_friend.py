@@ -27,9 +27,9 @@ def upgrade():
                     )
     op.create_index(op.f('ix_friendships_user_id'), 'friendships', ['user_id'], unique=False)
     op.add_column('users', sa.Column('invite_code', sa.String(), nullable=True))
-    with op.batch_alter_table("users") as batch_op:
-        batch_op.create_unique_constraint('users', ['invite_code'])
-    # batch_op.create_unique_constraint(None, 'users', ['invite_code'])
+    # with op.batch_alter_table("users") as batch_op:
+    #     batch_op.create_unique_constraint('users', ['invite_code'])
+    op.create_unique_constraint(None, 'users', ['invite_code'])
     # ### end Alembic commands ###
 
 

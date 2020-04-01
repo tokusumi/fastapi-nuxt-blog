@@ -80,7 +80,7 @@ def upgrade():
                     sa.Column('author_id', sa.Integer(), nullable=True),
                     sa.Column('created_at', sa.DateTime(), server_default=sa.text(
                         '(CURRENT_TIMESTAMP)'), nullable=False),
-                    sa.Column('body', sa.Text(length=100), nullable=True),
+                    sa.Column('body', sa.Text(), nullable=True),
                     sa.Column('post_id', sa.Integer(), nullable=False),
                     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
                     sa.ForeignKeyConstraint(['post_id'], ['post.id'], ),
