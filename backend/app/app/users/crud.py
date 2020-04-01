@@ -41,7 +41,7 @@ def create_user_query(db: Session, user: schemas.UserCreate):
 
 
 def update_user(db: Session, base_user: models.User, user: schemas.UserUpdate):
-    is_update = base_user.update_dict(user.dict())
+    is_update = base_user.update_dict({key: val for key, val in user.dict().items() if val is not None})
     if is_update:
         db.commit()
         db.refresh(base_user)

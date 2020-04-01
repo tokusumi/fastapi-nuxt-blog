@@ -1,0 +1,4 @@
+{
+    "subject": "New post from {author} !!!",
+    "body": "Title: {title}\nAuthor: {author}\n\nLet's click on the link below and Check it out!\n\n{url}"
+}

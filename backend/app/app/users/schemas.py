@@ -42,5 +42,15 @@ class User(UserBase):
         orm_mode = True
 
 
+class Author(UserBase):
+    id: int
+    username: str
+    is_active: bool
+    icon: str
+
+    class Config:
+        orm_mode = True
+
+
 class SuccessSchema(BaseModel):
     result: bool = True

@@ -1,7 +1,7 @@
 from typing import Optional, List
 from pydantic import BaseModel
 from datetime import datetime
-from app.users.schemas import User
+from app.users.schemas import Author
 
 
 class Success(BaseModel):
@@ -102,7 +102,7 @@ class FilterPost(BaseModel):
 
 class Post(BasePost):
     id: int
-    author: User
+    author: Author
     category: Category = None
     series: Series = None
     tags: List[Tag] = None
@@ -130,7 +130,7 @@ class CreateComment(BaseModel):
 class Comment(BaseComment):
     id: int
     post_id: int
-    author: User
+    author: Author
     body: str
     created_at: datetime
 
