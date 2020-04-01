@@ -12,6 +12,9 @@ from app.users.crud import (
     create_user_query,
     update_user,
     delete_user_query,
+    get_invitee,
+    append_friend,
+    recreate_and_update_invite_code
 )
 from app.db.session import get_db
 from app.auth.authentications import get_current_active_user
@@ -73,12 +76,12 @@ def delete_user(
     return db_user
 
 
-@app.get("/users/me/", response_model=schemas.User)
+@app.get("/users/me/", response_model=schemas.User, tags=['user'])
 async def read_users_me(current_user: schemas.User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.post("/users/image/", response_model=schemas.User)
+@app.post("/users/image/", response_model=schemas.User, tags=['user'])
 async def add_icon(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -86,3 +89,25 @@ async def add_icon(
 ):
     new_user = await process_image.save_and_add_icon(file, current_user.id, db)
     return new_user
+
+
+@app.get("/users/friend/reflesh/invite_code/", response_model=schemas.User, tags=['user'])
+async def reflesh_invite_code(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user),
+):
+    current_user = get_user_by_id_query(db, current_user.id)
+    return recreate_and_update_invite_code(db, current_user)
+
+
+@app.get("/users/friend/{invite_code}/", response_model=schemas.User, tags=['user'])
+async def add_friend(
+    invite_code: str,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_user),
+):
+    invitee = get_invitee(db, invite_code)
+    user, is_updated = append_friend(db, current_user, invitee)
+    if not is_updated:
+        raise HTTPException(status_code=400, detail="Already being friend")
+    return user
