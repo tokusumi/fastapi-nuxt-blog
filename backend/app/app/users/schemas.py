@@ -1,7 +1,5 @@
-from typing import Optional
-
+from typing import Optional, List
 from pydantic import BaseModel
-from fastapi import UploadFile
 
 
 class UserBase(BaseModel):
@@ -23,7 +21,28 @@ class UserUpdate(BaseModel):
     icon: Optional[str] = None
 
 
+class Friend(UserBase):
+    id: int
+    is_active: bool
+    icon: str
+
+    class Config:
+        orm_mode = True
+
+
 class User(UserBase):
+    id: int
+    username: str
+    is_active: bool
+    icon: str
+    invite_code: Optional[str] = None
+    friends: Optional[List[Friend]] = None
+
+    class Config:
+        orm_mode = True
+
+
+class Author(UserBase):
     id: int
     username: str
     is_active: bool

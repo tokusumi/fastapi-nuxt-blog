@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.blogs import models, schemas, crud, utils
 from app.db.session import get_db
 from app.auth.authentications import get_current_active_user
-
+from app.notifications.notify import post_mail_notify
 
 app = APIRouter()
 
@@ -60,7 +60,13 @@ def create_post(
     create_id_post_dict = utils.CreateIDPost(db, post).to_items()
     create_id_post_dict["author_id"] = current_user.id
     _post = schemas.CreatePost(**create_id_post_dict)
-    return crud.create_post(db, _post)
+
+    obj = crud.create_post(db, _post)
+
+    if obj.notification and obj.is_public:
+        post_mail_notify(obj)
+
+    return obj
 
 
 @app.put("/post/{post_id}/", response_model=schemas.Post, tags=["post"])
@@ -77,7 +83,12 @@ def update_post(
     if len(update_postID.to_items()) == 0:
         raise HTTPException(status_code=400, detail="no context")
 
-    return crud.update_post(db, _post, update_postID)
+    obj = crud.update_post(db, _post, update_postID)
+
+    if obj.notification and obj.is_public:
+        post_mail_notify(obj)
+
+    return obj
 
 
 @app.delete("/post/{post_id}/", response_model=schemas.Success, tags=["post"])
