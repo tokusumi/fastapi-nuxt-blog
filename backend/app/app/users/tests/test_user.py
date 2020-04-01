@@ -50,7 +50,9 @@ def test_create_user():
         "email": "foo1",
         "username": "fooo1",
         "is_active": True,
-        "icon": ""
+        "icon": "",
+        'friends': [],
+        'invite_code': None
     }
 
 
@@ -114,5 +116,7 @@ def test_delete_user():
         "email": "foo2",
         "username": "fooo2",
         "is_active": True,
-        "icon": ""
+        "icon": "",
+        'friends': [],
+        'invite_code': None
     }
