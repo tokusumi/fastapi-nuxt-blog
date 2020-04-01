@@ -87,5 +87,5 @@ class Comment(Base):
     author_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     author = relationship("User", backref="comments")
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
-    body = Column(Text(100))
+    body = Column(String)
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)

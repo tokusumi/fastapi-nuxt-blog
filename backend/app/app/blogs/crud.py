@@ -118,7 +118,7 @@ def get_post_query(
     db = filter_post_by_tags(db, tag_ids) if tag_ids is not None else db
     total = db.count()
     max_page = ceil(total / limit)
-    query = db.order_by(models.Post.id.desc()).offset(skip).limit(limit).all()
+    query = db.order_by(models.Post.public_at.desc(), models.Post.id.desc()).offset(skip).limit(limit).all()
     return query, max_page, total
 
 
