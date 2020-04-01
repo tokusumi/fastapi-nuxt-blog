@@ -24,3 +24,8 @@ aws_session = boto3.Session(
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
 )
+
+HOSTNAME = os.getenv('HOSTNAME', 'http://0.0.0.0/')
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '')
+FROM_EMAIL = os.getenv("NOTIFICATION_EMAIL_ADDRESS", "")
+POST_NOFICATION_TEMPLATE = 'app/notifications/templates/post_notification.json'
