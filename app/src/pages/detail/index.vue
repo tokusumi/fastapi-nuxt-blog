@@ -158,6 +158,7 @@ export default {
       this.marker = !this.marker;
     },
     async sendMessage() {
+      if (!this.message){
       await this.$axios
         .$post("/comment/", {
           post_id: this.post.id,
@@ -170,6 +171,7 @@ export default {
           this.addComment(comment);
         })
         .catch(e => {});
+      }
     },
     clearMessage() {
       this.message = "";
