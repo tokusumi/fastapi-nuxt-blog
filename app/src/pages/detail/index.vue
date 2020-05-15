@@ -162,7 +162,7 @@ export default {
         .$post("/comment/", {
           post_id: this.post.id,
           body: this.message,
-          author_id: 1
+          author_id: this.$auth.user.id
         })
         .then(comment => {
           this.resetIcon();
