@@ -145,10 +145,10 @@ export default {
       return this.icons[this.iconIndex];
     },
     public_at_or_none() {
-      if (typeof this.post.public_at === "str") {
-        return this.post.public_at.sub_str(0, 10);
+      if (typeof this.post.public_at === "string") {
+        return this.post.public_at.substr(0, 10);
       } else {
-        return "None";
+        return None;
       }
     }
   },
