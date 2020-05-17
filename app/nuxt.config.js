@@ -4,6 +4,13 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     mode: 'universal',
     srcDir: 'src',
+
+    watchers: {
+        webpack: {
+            poll: true
+        }
+    },
+
     /*
     ** Headers of the page
     */
@@ -35,7 +42,8 @@ export default {
         {
             src: '@/plugins/vue-mavon-editor',
             srr: false
-        }
+        },
+        { src: '~/plugins/day' }
     ],
     /*
     ** Nuxt.js dev-modules

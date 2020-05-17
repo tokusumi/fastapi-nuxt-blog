@@ -31,7 +31,7 @@ export default {
   name: "SelectDate",
   props: {
     date: {
-      validator: prop => typeof prop === "string" || prop === null
+      validator: prop => typeof prop === "string"
     }
   },
   created() {
@@ -43,11 +43,11 @@ export default {
   }),
   methods: {
     setDate() {
-      return this.date;
+      return this.date.slice(0, 10);
     },
     clear() {
-      this._date = null;
-      this.$emit("save", null);
+      this._date = this.setDate();
+      this.$emit("save", this._data + "T00:00:00");
     },
     save() {
       this.$refs.menu.save(this._date);

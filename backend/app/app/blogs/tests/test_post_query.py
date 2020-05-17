@@ -12,6 +12,7 @@ def test_create_post(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'category_id': category.id,
         'series_id': series.id,
@@ -39,6 +40,7 @@ def test_update_post(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'category_id': category.id,
         'series_id': series.id,
@@ -55,6 +57,7 @@ def test_update_post(SessionLocal):
     new_posts = {
         'title': 'hoge2',
         'body': 'fuga2',
+        'public_at': '2020-05-17T00:00:00',
         'category': category2.name,
         'tags': [tag2.name],
     }
@@ -81,6 +84,7 @@ def test_delete_post(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'category_id': category.id,
         'series_id': series.id,
@@ -112,6 +116,7 @@ def test_filter_by_category(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'category_id': category.id,
     }
@@ -134,6 +139,7 @@ def test_filter_by_series(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'series_id': series.id,
     }
@@ -156,6 +162,7 @@ def test_filter_by_tag(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'tag_ids': [tag.id],
     }
@@ -179,6 +186,7 @@ def test_filter_by_tags(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'tag_ids': [tag1.id],
     }
@@ -187,6 +195,7 @@ def test_filter_by_tags(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'tag_ids': [tag1.id, tag2.id],
     }
@@ -205,6 +214,7 @@ def test_filter_by_is_public(SessionLocal):
     posts = {
         'title': 'hoge',
         'body': 'fuga',
+        'public_at': '2020-05-17T00:00:00',
         'author_id': user.id,
         'is_public': False
     }

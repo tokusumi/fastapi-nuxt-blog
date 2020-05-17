@@ -123,6 +123,8 @@ def create_comment(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_active_user),
 ):
+    if comment.body == "":
+        raise HTTPException(status_code=400, detail="No Comment")
     return crud.create_comment(db, comment, author_id=current_user.id)
 
 

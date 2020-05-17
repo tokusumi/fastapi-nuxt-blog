@@ -145,10 +145,10 @@ export default {
       return this.icons[this.iconIndex];
     },
     public_at_or_none() {
-      if (typeof this.post.public_at === "str") {
-        return this.post.public_at.sub_str(0, 10);
+      if (typeof this.post.public_at === "string") {
+        return this.post.public_at.substr(0, 10);
       } else {
-        return "None";
+        return None;
       }
     }
   },
@@ -158,11 +158,12 @@ export default {
       this.marker = !this.marker;
     },
     async sendMessage() {
+      if (!this.message){
       await this.$axios
         .$post("/comment/", {
           post_id: this.post.id,
           body: this.message,
-          author_id: 1
+          author_id: this.$auth.user.id
         })
         .then(comment => {
           this.resetIcon();
@@ -170,6 +171,7 @@ export default {
           this.addComment(comment);
         })
         .catch(e => {});
+      }
     },
     clearMessage() {
       this.message = "";
