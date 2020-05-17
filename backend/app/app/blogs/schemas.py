@@ -54,7 +54,7 @@ class BasePost(BaseModel):
     body: Optional[str] = None
     is_public: bool = False
     notification: bool = False
-    public_at: Optional[datetime] = None
+    public_at: datetime
 
 
 class CreatePost(BasePost):
