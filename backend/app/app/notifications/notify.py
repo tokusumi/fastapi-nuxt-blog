@@ -34,6 +34,9 @@ def post_mail_notify(post: Post):
 
 
 def _mail_notify(author: str, title: str, url: str, to_emails: List[str]):
+    if not SENDGRID_API_KEY:
+        return None
+
     data = load_json(POST_NOFICATION_TEMPLATE)
     if not data.get('body'):
         raise KeyError('e-mail template does not contain body')
