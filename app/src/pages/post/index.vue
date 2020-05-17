@@ -80,7 +80,8 @@ export default {
       categories: await getValue("/category/", app.$axios),
       serieses: await getValue("/series/", app.$axios),
       tags: await getValue("/tag/", app.$axios),
-      src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
+      src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
+      public_at: app.$dayjs().format('YYYY-MM-DDTHH:mm:ss'),
     };
   },
   data: () => ({
@@ -89,7 +90,6 @@ export default {
     body: "",
     image: "",
     mainImgUrl: "",
-    public_at: null,
     select_tags: [],
     select_category: "",
     select_series: "",
@@ -178,7 +178,7 @@ export default {
       this.body = "";
       this.iamge = "";
       this.mainImgUrl = "";
-      this.public_at = null;
+      this.public_at = this.$dayjs().format('YYYY-MM-DDTHH:mm:ss');
       this.select_tags = [];
       this.select_category = "";
       this.select_series = "";

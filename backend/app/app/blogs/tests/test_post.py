@@ -58,6 +58,7 @@ def test_create_post():
         json={
             "title": "1",
             "body": "1",
+            "public_at": "2020-05-17T00:00:00",
             "category": category.json()["name"],
             "series": series.json()["name"],
             "tags": [tag.json()["name"]],
@@ -86,15 +87,15 @@ def test_get_post():
     assert tag.status_code == 200
 
     response = client.post(
-        "/post/", json={"title": "1", "body": "1", "category": category_name, },
+        "/post/", json={"title": "1", "body": "1", "category": category_name, "public_at": "2020-05-17T00:00:00", },
     )
     assert response.status_code == 200
     response = client.post(
-        "/post/", json={"title": "2", "body": "2", "series": series_name, },
+        "/post/", json={"title": "2", "body": "2", "series": series_name, "public_at": "2020-05-17T00:00:00", },
     )
     assert response.status_code == 200
     response = client.post(
-        "/post/", json={"title": "3", "body": "3", "tags": [tag_name], "is_public": True},
+        "/post/", json={"title": "3", "body": "3", "tags": [tag_name], "is_public": True, "public_at": "2020-05-17T00:00:00", },
     )
     assert response.status_code == 200
 
@@ -153,10 +154,10 @@ def test_get_post_by_id():
     )
     assert user.status_code == 200
 
-    response = client.post("/post/", json={"title": "1", "body": "1", })
+    response = client.post("/post/", json={"title": "1", "body": "1", "public_at": "2020-05-17T00:00:00", })
     assert response.status_code == 200
 
-    response = client.post("/post/", json={"title": "2", "body": "2", })
+    response = client.post("/post/", json={"title": "2", "body": "2", "public_at": "2020-05-17T00:00:00", })
     assert response.status_code == 200
 
     response = client.get("/post/2/")
@@ -185,6 +186,7 @@ def test_delete_post():
         json={
             "title": "1",
             "body": "1",
+            "public_at": "2020-05-17T00:00:00", 
             "category": category.json()["name"],
             "series": series.json()["name"],
             "tags": [tag.json()["name"]],
@@ -210,11 +212,11 @@ def test_create_comment():
     assert user.status_code == 200
     user_id = user.json()["id"]
 
-    response = client.post("/post/", json={"title": "1", "body": "1"})
+    response = client.post("/post/", json={"title": "1", "body": "1", "public_at": "2020-05-17T00:00:00", })
     assert response.status_code == 200
 
     post_id = response.json()["id"]
-    response = client.post("/comment/", json={"body": "hogefuga", "post_id": post_id})
+    response = client.post("/comment/", json={"body": "hogefuga", "post_id": post_id, })
     assert response.status_code == 200
 
 
@@ -229,7 +231,7 @@ def test_get_comment():
     assert user.status_code == 200
     user_id = user.json()["id"]
 
-    response = client.post("/post/", json={"title": "1", "body": "1", })
+    response = client.post("/post/", json={"title": "1", "body": "1", "public_at": "2020-05-17T00:00:00", })
     assert response.status_code == 200
 
     post_id = response.json()["id"]
@@ -252,7 +254,7 @@ def test_delete_comment():
     assert user.status_code == 200
     user_id = user.json()["id"]
 
-    response = client.post("/post/", json={"title": "1", "body": "1"})
+    response = client.post("/post/", json={"title": "1", "body": "1", "public_at": "2020-05-17T00:00:00", })
     assert response.status_code == 200
 
     post_id = response.json()["id"]
