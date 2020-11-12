@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend/app
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Python  
+      uses: actions/setup-python@master
+      with:
+        python-version: 3.6
+
+    - name: Generate coverage report
+      run: |
+        pip install pytest
+        pip install pytest-cov
+        pip install pytest-asyncio
+        pip install -r requirements.txt
+        pytest --cov=./app --cov-report=xml --disable-warnings
+      working-directory: ${{env.working-directory}}
+
+    - name: Upload coverage to Codecov  
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ${{env.working-directory}}/coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+
+  backend-deploy:
+    needs: backend-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run backend branch
+      run: |
+        git filter-branch --subdirectory-filter backend/app -- --all
+
+    - uses: akhileshns/heroku-deploy@v3.0.0
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_API_DEV_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
+
+  frontend-deploy:
+    needs: backend-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run frontend branch
+      run: git filter-branch --subdirectory-filter app -- --all
+
+    - name: Add production environment variable
+      env: 
+        HEROKU_API_KEY: ${{secrets.HEROKU_API_DEV_APP_NAME}}
+      run : |
+        echo "API_URL=https://$HEROKU_API_KEY.herokuapp.com/" >> ./src/configs/.env.prod
+        echo "API_URL_BROWSER=https://$HEROKU_API_KEY.herokuapp.com/" >> ./src/configs/.env.prod
+        git config --global user.email "you@example.com"
+        git config --global user.name "you"
+        git commit -am 'prod'
+    - uses: akhileshns/heroku-deploy@v3.0.0
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_DEV_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}

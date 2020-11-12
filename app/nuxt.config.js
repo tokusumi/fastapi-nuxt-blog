@@ -41,7 +41,7 @@ export default {
     plugins: [
         {
             src: '@/plugins/vue-mavon-editor',
-            srr: false
+            ssr: false
         },
         { src: '~/plugins/day' }
     ],

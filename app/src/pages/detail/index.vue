@@ -70,13 +70,14 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="message"
-                  :append-outer-icon="message ? 'mdi-send' : 'mdi-microphone'"
+                  :append-outer-icon="button"
                   :prepend-icon="icon"
                   filled
                   clear-icon="mdi-close-circle"
                   clearable
                   label="Comment"
                   type="text"
+                  placeholder="Hey!!"
                   @click:append="toggleMarker"
                   @click:append-outer="sendMessage"
                   @click:prepend="changeIcon"
@@ -110,7 +111,7 @@ export default {
   data: () => ({
     comment_num: "#",
     show: false,
-    message: "Hey!",
+    message: "",
     marker: true,
     iconIndex: 0,
     icons: [
@@ -122,6 +123,11 @@ export default {
       "mdi-emoticon-neutral",
       "mdi-emoticon-sad",
       "mdi-emoticon-tongue"
+    ],
+    buttonIndex: 0,
+    buttons: [
+      "mdi-send",
+      "mdi-microphone"
     ],
     markdownOption: {
       readmodel: true,
@@ -144,6 +150,9 @@ export default {
     icon() {
       return this.icons[this.iconIndex];
     },
+    button() {
+      return this.buttons[this.buttonIndex];
+    },
     public_at_or_none() {
       if (typeof this.post.public_at === "string") {
         return this.post.public_at.substr(0, 10);
@@ -158,8 +167,9 @@ export default {
       this.marker = !this.marker;
     },
     async sendMessage() {
-      if (!this.message){
-      await this.$axios
+      if (this.message.trim().length > 0 && this.buttonIndex === 0){
+        this.buttonIndex = 1;
+        await this.$axios
         .$post("/comment/", {
           post_id: this.post.id,
           body: this.message,
@@ -168,9 +178,10 @@ export default {
         .then(comment => {
           this.resetIcon();
           this.clearMessage();
-          this.addComment(comment);
+          this.clearComment(comment);
         })
         .catch(e => {});
+        this.buttonIndex = 0;
       }
     },
     clearMessage() {
