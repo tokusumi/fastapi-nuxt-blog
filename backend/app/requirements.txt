@@ -14,6 +14,7 @@ python-multipart
 pillow
 gunicorn
 uvicorn
+uvloop
 psycopg2
 pytest
 pytest-cov
