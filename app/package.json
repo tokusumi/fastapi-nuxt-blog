@@ -1,6 +1,9 @@
 {
     "name": "blog",
     "version": "1.0.0",
+    "engines": {
+        "node": "10.15.1"
+    }
     "description": "My splendiferous Nuxt.js project",
     "author": "",
     "private": true,
