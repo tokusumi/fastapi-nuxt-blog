@@ -97,6 +97,7 @@
                   placeholder="Hey!!"
                   @click:append="toggleMarker"
                   @click:append-outer="sendMessage"
+                  @keypress.enter.native.prevent="sendMessage"
                   @click:prepend="changeIcon"
                   @click:clear="clearMessage"
                 ></v-text-field>
