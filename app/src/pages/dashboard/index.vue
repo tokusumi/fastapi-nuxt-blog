@@ -50,7 +50,14 @@ export default {
     EditItem,
   },
   async asyncData({ app }) {
-    const data = await app.$axios.$get("/post/");
+    const data = await app.$axios
+      .$get("/post/")
+      .then((res) => {
+        return res;
+      })
+      .catch((e) => {
+        return { data: [], max_page: 0, total: 0 };
+      });
     const posts = data.data.map((x) => {
       x.category = x.category ? x.category.name || "" : "";
       x.series = x.series ? x.series.name || "" : "";

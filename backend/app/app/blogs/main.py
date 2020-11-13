@@ -16,8 +16,8 @@ def get_post(
     series: Optional[str] = None,
     tags: Optional[List[str]] = Query(None),
     is_private: Optional[bool] = True,
-    page: int = 1,
-    length: int = 6,
+    page: int = Query(1, gt=0),
+    length: int = Query(6, gt=0),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_active_user),
 ):
@@ -106,8 +106,8 @@ def delete_post(
 @app.get("/comment/{post_id}/", response_model=List[schemas.Comment], tags=["comment"])
 def get_comment_by_id(
     post_id: int,
-    skip: int = 0,
-    limit: int = 100,
+    skip: int = Query(0, gt=-1),
+    limit: int = Query(100, gt=0),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_active_user),
 ):
