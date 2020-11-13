@@ -13,11 +13,20 @@
         <v-toolbar-title>Posts</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-btn color="teal lighten-1" :loading="loading" dark class="mb-2" to="/post/">New Item</v-btn>
+        <v-btn
+          color="teal lighten-1"
+          :loading="loading"
+          dark
+          class="mb-2"
+          to="/post/"
+          >New Item</v-btn
+        >
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon small class="mr-2" @click="showItem(item)">mdi-book-open-variant</v-icon>
+      <v-icon small class="mr-2" @click="showItem(item)"
+        >mdi-book-open-variant</v-icon
+      >
       <edit-item
         :item="item"
         :categories="categories"
@@ -38,27 +47,34 @@ import EditItem from "~/components/EditItem.vue";
 export default {
   pageTitle: "Dashboard",
   components: {
-    EditItem
+    EditItem,
   },
   async asyncData({ app }) {
-    const data = await app.$axios.$get("/post/");
-    const posts = data.data.map(x => {
+    const data = await app.$axios
+      .$get("/post/")
+      .then((res) => {
+        return res;
+      })
+      .catch((e) => {
+        return { data: [], max_page: 0, total: 0 };
+      });
+    const posts = data.data.map((x) => {
       x.category = x.category ? x.category.name || "" : "";
       x.series = x.series ? x.series.name || "" : "";
-      x.tags = x.tags.map(tag => {
+      x.tags = x.tags.map((tag) => {
         return tag.name;
       });
       return x;
     });
-    const getValue = async function(endpoint, axios) {
+    const getValue = async function (endpoint, axios) {
       const values = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return values;
@@ -71,7 +87,7 @@ export default {
       tagEndpoint: "/tag/",
       categories: await getValue("/category/", app.$axios),
       serieses: await getValue("/series/", app.$axios),
-      tags: await getValue("/tag/", app.$axios)
+      tags: await getValue("/tag/", app.$axios),
     };
   },
   data: () => ({
@@ -83,23 +99,23 @@ export default {
         text: "Title",
         align: "start",
         sortable: false,
-        value: "title"
+        value: "title",
       },
       { text: "Author", value: "author.username" },
       { text: "Category", value: "category" },
       { text: "Series", value: "series" },
       { text: "Tags", value: "tags" },
       { text: "Is public", value: "is_public" },
-      { text: "Actions", value: "actions", sortable: false }
-    ]
+      { text: "Actions", value: "actions", sortable: false },
+    ],
   }),
   watch: {
     options: {
       handler() {
         this.sendGetPost();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     initialize() {
@@ -107,7 +123,7 @@ export default {
     },
     getTags(tags) {
       return length(tags) > 0
-        ? tags.map(x => {
+        ? tags.map((x) => {
             return x.name;
           })
         : [];
@@ -115,12 +131,12 @@ export default {
     async getValue(endpoint, axios) {
       const out = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return out;
@@ -144,24 +160,24 @@ export default {
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
       await this.$axios
         .$get("/post/", { params: { page: page, length: itemsPerPage } })
-        .then(res => {
+        .then((res) => {
           this.total = res.total;
-          this.posts = res.data.map(x => {
+          this.posts = res.data.map((x) => {
             x.category = x.category ? x.category.name || "" : "";
             x.series = x.series ? x.series.name || "" : "";
-            x.tags = x.tags.map(tag => {
+            x.tags = x.tags.map((tag) => {
               return tag.name;
             });
             return x;
           });
         })
-        .catch(e => {});
+        .catch((e) => {});
     },
     async sendDeletePost(post_id) {
       await this.$axios
         .$delete(`/post/${post_id}/`)
-        .then(res => {})
-        .catch(e => {});
+        .then((res) => {})
+        .catch((e) => {});
     },
     reload() {
       this.initialize();
@@ -178,7 +194,7 @@ export default {
           this.tags = await this.getValue(endpoint, this.$axios);
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -58,12 +58,12 @@ export default {
   components: {
     WriteLogo,
     RocketLogo,
-    BookLogo
+    BookLogo,
   },
   data() {
     return {
-      show: false
+      show: false,
     };
-  }
+  },
 };
 </script>

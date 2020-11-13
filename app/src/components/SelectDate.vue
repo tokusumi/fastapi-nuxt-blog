@@ -31,15 +31,15 @@ export default {
   name: "SelectDate",
   props: {
     date: {
-      validator: prop => typeof prop === "string"
-    }
+      validator: (prop) => typeof prop === "string",
+    },
   },
   created() {
     this._date = this.setDate();
   },
   data: () => ({
     menu: false,
-    _date: null
+    _date: null,
   }),
   methods: {
     setDate() {
@@ -52,7 +52,7 @@ export default {
     save() {
       this.$refs.menu.save(this._date);
       this.$emit("save", this._date + "T00:00:00");
-    }
-  }
+    },
+  },
 };
 </script>

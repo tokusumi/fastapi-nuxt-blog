@@ -7,7 +7,13 @@
         v-on:fileUploadEvent="changeMainImg"
         v-on:fileSelectEvent="selectMainImg"
       />
-      <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
+      <v-img
+        class="white--text align-end"
+        contain
+        height="300px"
+        :src="mainImgUrl"
+        alt="MainImg"
+      />
       <v-col cols="12" sm="12" md="12">
         <select-date :date="public_at" v-on:save="saveDate"></select-date>
       </v-col>
@@ -17,17 +23,45 @@
 
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select v-model="select_category" :items="categories" label="Category" dense></v-select>
-          <add-dialog :endpoint="categoryEndpoint" field="category" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="select_category"
+            :items="categories"
+            label="Category"
+            dense
+          ></v-select>
+          <add-dialog
+            :endpoint="categoryEndpoint"
+            field="category"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
 
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select v-model="select_series" :items="serieses" label="Series" dense></v-select>
-          <add-dialog :endpoint="seriesEndpoint" field="series" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="select_series"
+            :items="serieses"
+            label="Series"
+            dense
+          ></v-select>
+          <add-dialog
+            :endpoint="seriesEndpoint"
+            field="series"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
         <v-col class="d-flex" cols="12" sm="12">
-          <v-select v-model="select_tags" :items="tags" label="Select tags" multiple chips></v-select>
-          <add-dialog :endpoint="tagEndpoint" field="tag" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="select_tags"
+            :items="tags"
+            label="Select tags"
+            multiple
+            chips
+          ></v-select>
+          <add-dialog
+            :endpoint="tagEndpoint"
+            field="tag"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
       </v-row>
       <no-ssr>
@@ -40,12 +74,26 @@
           @imgAdd="imgAdd"
         />
       </no-ssr>
-      <v-switch color="teal lighten-1" v-model="notify_switch" :label="`${notifyMessage()}`"></v-switch>
-      <v-switch color="teal lighten-1" v-model="publish_switch" :label="`${publishMessage()}`"></v-switch>
+      <v-switch
+        color="teal lighten-1"
+        v-model="notify_switch"
+        :label="`${notifyMessage()}`"
+      ></v-switch>
+      <v-switch
+        color="teal lighten-1"
+        v-model="publish_switch"
+        :label="`${publishMessage()}`"
+      ></v-switch>
     </v-container>
     <v-divider></v-divider>
     <v-btn @click="clear">Clear</v-btn>
-    <v-btn class="mr-4" color="teal lighten-1" :loading="loading" @click="submit">Submit</v-btn>
+    <v-btn
+      class="mr-4"
+      color="teal lighten-1"
+      :loading="loading"
+      @click="submit"
+      >Submit</v-btn
+    >
   </v-form>
 </template>
 <script>
@@ -57,18 +105,18 @@ export default {
   components: {
     FileUpload,
     AddDialog,
-    SelectDate
+    SelectDate,
   },
   async asyncData({ app, query, error }) {
-    const getValue = async function(endpoint, axios) {
+    const getValue = async function (endpoint, axios) {
       const values = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return values;
@@ -81,7 +129,7 @@ export default {
       serieses: await getValue("/series/", app.$axios),
       tags: await getValue("/tag/", app.$axios),
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-      public_at: app.$dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+      public_at: app.$dayjs().format("YYYY-MM-DDTHH:mm:ss"),
     };
   },
   data: () => ({
@@ -116,19 +164,19 @@ export default {
       fullscreen: false,
       readmodel: true,
       htmlcode: true,
-      help: true
-    }
+      help: true,
+    },
   }),
   methods: {
     async getValue(endpoint, axios) {
       const out = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return out;
@@ -160,13 +208,13 @@ export default {
           author_id: this.$auth.user.id,
           category: this.select_category,
           series: this.select_series,
-          tags: this.select_tags
+          tags: this.select_tags,
         })
-        .then(res => {
+        .then((res) => {
           this.clear();
           this.$router.push(`/detail/?id=${res.id}`);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         })
         .finally(() => {
@@ -178,7 +226,7 @@ export default {
       this.body = "";
       this.iamge = "";
       this.mainImgUrl = "";
-      this.public_at = this.$dayjs().format('YYYY-MM-DDTHH:mm:ss');
+      this.public_at = this.$dayjs().format("YYYY-MM-DDTHH:mm:ss");
       this.select_tags = [];
       this.select_category = "";
       this.select_series = "";
@@ -198,7 +246,7 @@ export default {
     },
     selectMainImg(resCode, target) {
       let reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         this.mainImgUrl = e.target.result;
       };
       reader.readAsDataURL(target.files[0]);
@@ -213,21 +261,21 @@ export default {
       this.$axios
         .$post("/image/doc/", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.$refs.md.$img2Url(pos, res.image);
         })
-        .catch(errorMsg => alert(errorMsg))
+        .catch((errorMsg) => alert(errorMsg))
         .finally(() => {
           return false;
         });
     },
     saveDate(date) {
       this.public_at = date;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

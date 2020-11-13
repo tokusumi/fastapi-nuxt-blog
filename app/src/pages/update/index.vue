@@ -7,26 +7,64 @@
         v-on:fileUploadEvent="changeMainImg"
         v-on:fileSelectEvent="selectMainImg"
       />
-      <v-img class="white--text align-end" contain height="300px" :src="mainImgUrl" alt="MainImg" />
+      <v-img
+        class="white--text align-end"
+        contain
+        height="300px"
+        :src="mainImgUrl"
+        alt="MainImg"
+      />
       <v-col cols="12" sm="12" md="12">
         <select-date :date="post.public_at" v-on:save="saveDate"></select-date>
       </v-col>
       <v-col cols="12" sm="12" md="12">
-        <v-text-field v-model="post.title" label="Title" required></v-text-field>
+        <v-text-field
+          v-model="post.title"
+          label="Title"
+          required
+        ></v-text-field>
       </v-col>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select v-model="post.select_category" :items="categories" label="Category" dense></v-select>
-          <add-dialog :endpoint="categoryEndpoint" field="category" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="post.select_category"
+            :items="categories"
+            label="Category"
+            dense
+          ></v-select>
+          <add-dialog
+            :endpoint="categoryEndpoint"
+            field="category"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
 
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select v-model="post.select_series" :items="serieses" label="Series" dense></v-select>
-          <add-dialog :endpoint="seriesEndpoint" field="series" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="post.select_series"
+            :items="serieses"
+            label="Series"
+            dense
+          ></v-select>
+          <add-dialog
+            :endpoint="seriesEndpoint"
+            field="series"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
         <v-col class="d-flex" cols="12" sm="12">
-          <v-select v-model="post.select_tags" :items="tags" label="Select tags" multiple chips></v-select>
-          <add-dialog :endpoint="tagEndpoint" field="tag" v-on:new="reflesh"></add-dialog>
+          <v-select
+            v-model="post.select_tags"
+            :items="tags"
+            label="Select tags"
+            multiple
+            chips
+          ></v-select>
+          <add-dialog
+            :endpoint="tagEndpoint"
+            field="tag"
+            v-on:new="reflesh"
+          ></add-dialog>
         </v-col>
       </v-row>
       <no-ssr>
@@ -39,12 +77,26 @@
           @imgAdd="imgAdd"
         />
       </no-ssr>
-      <v-switch color="teal lighten-1" v-model="post.notify_switch" :label="`${notifyMessage()}`"></v-switch>
-      <v-switch color="teal lighten-1" v-model="post.publish_switch" :label="`${publishMessage()}`"></v-switch>
+      <v-switch
+        color="teal lighten-1"
+        v-model="post.notify_switch"
+        :label="`${notifyMessage()}`"
+      ></v-switch>
+      <v-switch
+        color="teal lighten-1"
+        v-model="post.publish_switch"
+        :label="`${publishMessage()}`"
+      ></v-switch>
     </v-container>
     <v-divider></v-divider>
     <v-btn @click="clear">Clear</v-btn>
-    <v-btn class="mr-4" color="teal lighten-1" :loading="loading" @click="submit">Submit</v-btn>
+    <v-btn
+      class="mr-4"
+      color="teal lighten-1"
+      :loading="loading"
+      @click="submit"
+      >Submit</v-btn
+    >
   </v-form>
 </template>
 <script>
@@ -56,12 +108,12 @@ export default {
   components: {
     FileUpload,
     AddDialog,
-    SelectDate
+    SelectDate,
   },
   async asyncData({ app, query, error }) {
     const post = await app.$axios
       .$get(`/post/${query.id}/`)
-      .then(data => {
+      .then((data) => {
         return {
           id: data.id,
           title: data.title,
@@ -69,17 +121,17 @@ export default {
           image: data.image,
           public_at: data.public_at,
           select_tags: data.tags
-            ? data.tags.map(x => {
+            ? data.tags.map((x) => {
                 return x.name;
               })
             : [],
           select_category: data.category ? data.category.name : "",
           select_series: data.series ? data.series.name : "",
           notify_switch: data.notification,
-          publish_switch: data.is_public
+          publish_switch: data.is_public,
         };
       })
-      .catch(e => {
+      .catch((e) => {
         return {
           title: "",
           body: "",
@@ -89,18 +141,18 @@ export default {
           select_category: "",
           select_series: "",
           notify_switch: true,
-          publish_switch: false
+          publish_switch: false,
         };
       });
-    const getValue = async function(endpoint, axios) {
+    const getValue = async function (endpoint, axios) {
       const values = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return values;
@@ -115,7 +167,7 @@ export default {
       serieses: await getValue("/series/", app.$axios),
       tags: await getValue("/tag/", app.$axios),
       src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-      mainImgUrl: post.image
+      mainImgUrl: post.image,
     };
   },
   data: () => ({
@@ -141,19 +193,19 @@ export default {
       fullscreen: false,
       readmodel: true,
       htmlcode: true,
-      help: true
-    }
+      help: true,
+    },
   }),
   methods: {
     async getValue(endpoint, axios) {
       const out = await axios
         .$get(endpoint)
-        .then(res => {
-          return res.map(x => {
+        .then((res) => {
+          return res.map((x) => {
             return x.name;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           return [];
         });
       return out;
@@ -184,13 +236,13 @@ export default {
           author_id: this.$auth.user.id,
           category: this.post.select_category,
           series: this.post.select_series,
-          tags: this.post.select_tags
+          tags: this.post.select_tags,
         })
-        .then(res => {
+        .then((res) => {
           this.clear();
           this.$router.push(`/detail/?id=${res.id}`);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -219,7 +271,7 @@ export default {
     },
     selectMainImg(resCode, target) {
       let reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         this.mainImgUrl = e.target.result;
       };
       reader.readAsDataURL(target.files[0]);
@@ -234,21 +286,21 @@ export default {
       this.$axios
         .$post("/image/doc/", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.$refs.md.$img2Url(pos, res.image);
         })
-        .catch(errorMsg => alert(errorMsg))
+        .catch((errorMsg) => alert(errorMsg))
         .finally(() => {
           return false;
         });
     },
     saveDate(date) {
       this.post.public_at = date;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

@@ -14,14 +14,24 @@
             </v-col>
             <v-col class="d-flex" cols="12" xs="12" sm="6">
               <v-row align="center" justify="left">
-                <v-btn class="teal lighten-1" @click.native="toUpdate">Change profile</v-btn>
+                <v-btn class="teal lighten-1" @click.native="toUpdate"
+                  >Change profile</v-btn
+                >
               </v-row>
             </v-col>
           </v-row>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="form.userName" label="Username" readonly></v-text-field>
-          <v-text-field v-model="form.contactEmail" label="Email Address" readonly></v-text-field>
+          <v-text-field
+            v-model="form.userName"
+            label="Username"
+            readonly
+          ></v-text-field>
+          <v-text-field
+            v-model="form.contactEmail"
+            label="Email Address"
+            readonly
+          ></v-text-field>
         </v-card-text>
       </v-card>
     </v-container>
@@ -36,14 +46,14 @@ export default {
       form: {
         imgUrl: this.$auth.user.icon,
         userName: this.$auth.user.username,
-        contactEmail: this.$auth.user.email
-      }
+        contactEmail: this.$auth.user.email,
+      },
     };
   },
   methods: {
     toUpdate() {
       this.$router.push("/profile/update/");
-    }
-  }
+    },
+  },
 };
 </script>

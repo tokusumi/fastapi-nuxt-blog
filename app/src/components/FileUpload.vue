@@ -1,14 +1,29 @@
 <template>
   <v-container grid-list-md text-xs-center fill-height>
     <v-layout row wrap align-center>
-      <input ref="image" class="hide-input" type="file" accept="image/*" @change="imageSelected" />
+      <input
+        ref="image"
+        class="hide-input"
+        type="file"
+        accept="image/*"
+        @change="imageSelected"
+      />
       <v-btn v-if="isNotUploaded" class="select-button" @click="selectImage">
         Select
         <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
-      <v-btn v-else class="upload-button" color="teal lighten-1" @click="uploadImage">
+      <v-btn
+        v-else
+        class="upload-button"
+        color="teal lighten-1"
+        @click="uploadImage"
+      >
         Upload
-        <v-progress-circular v-if="loading" size="24" :indeterminate="loading"></v-progress-circular>
+        <v-progress-circular
+          v-if="loading"
+          size="24"
+          :indeterminate="loading"
+        ></v-progress-circular>
         <v-icon v-else right color="white">mdi-cloud-upload</v-icon>
       </v-btn>
     </v-layout>
@@ -18,13 +33,13 @@
 export default {
   name: "FileUpload",
   props: {
-    endpoint: ""
+    endpoint: "",
   },
   data: () => ({
     isNotUploaded: true,
     photo: "",
     photoName: "",
-    loading: false
+    loading: false,
   }),
   methods: {
     selectImage() {
@@ -43,13 +58,13 @@ export default {
       this.$axios
         .$post(this.endpoint, formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.$emit("fileUploadEvent", 0, res);
         })
-        .catch(errorMsg => {
+        .catch((errorMsg) => {
           this.$emit("fileUploadEvent", -1, "");
         })
         .finally(() => {
@@ -61,8 +76,8 @@ export default {
       this.isNotUploaded = true;
       this.photo = "";
       this.photoName = "";
-    }
-  }
+    },
+  },
 };
 </script>
  

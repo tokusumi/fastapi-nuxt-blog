@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">add {{field}}</span>
+        <span class="headline">add {{ field }}</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -26,29 +26,29 @@ export default {
   name: "AddDialog",
   props: {
     endpoint: "",
-    field: ""
+    field: "",
   },
   data: () => ({
     dialog: false,
-    value: ""
+    value: "",
   }),
   methods: {
     add() {
       this.$axios
         .$post(this.endpoint, {
-          name: this.value
+          name: this.value,
         })
-        .then(res => {
+        .then((res) => {
           this.$emit("new", this.endpoint);
         })
-        .catch(errorMsg => {
+        .catch((errorMsg) => {
           console.log(errorMsg);
         })
         .finally(() => {
           this.dialog = false;
           return false;
         });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -12,25 +12,57 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <select-date :date="post.public_at" v-on:save="saveDate"></select-date>
+              <select-date
+                :date="post.public_at"
+                v-on:save="saveDate"
+              ></select-date>
             </v-col>
             <v-col cols="12" sm="12" md="12">
               <v-text-field v-model="post.title" label="Title"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <add-dialog :endpoint="categoryEndpoint" field="category" v-on:new="reflesh"></add-dialog>
-              <v-select v-model="post.category" :items="categories" label="Categories"></v-select>
+              <add-dialog
+                :endpoint="categoryEndpoint"
+                field="category"
+                v-on:new="reflesh"
+              ></add-dialog>
+              <v-select
+                v-model="post.category"
+                :items="categories"
+                label="Categories"
+              ></v-select>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <add-dialog :endpoint="seriesEndpoint" field="series" v-on:new="reflesh"></add-dialog>
-              <v-select v-model="post.series" :items="serieses" label="Series"></v-select>
+              <add-dialog
+                :endpoint="seriesEndpoint"
+                field="series"
+                v-on:new="reflesh"
+              ></add-dialog>
+              <v-select
+                v-model="post.series"
+                :items="serieses"
+                label="Series"
+              ></v-select>
             </v-col>
             <v-col cols="12" sm="6" md="8">
-              <add-dialog :endpoint="tagEndpoint" field="tag" v-on:new="reflesh"></add-dialog>
-              <v-select v-model="post.tags" :items="tags" label="Tags" multiple chips></v-select>
+              <add-dialog
+                :endpoint="tagEndpoint"
+                field="tag"
+                v-on:new="reflesh"
+              ></add-dialog>
+              <v-select
+                v-model="post.tags"
+                :items="tags"
+                label="Tags"
+                multiple
+                chips
+              ></v-select>
             </v-col>
             <v-col cols="12" sm="6" md="3">
-              <v-switch v-model="post.is_public" :label="`${publishMessage()}`"></v-switch>
+              <v-switch
+                v-model="post.is_public"
+                :label="`${publishMessage()}`"
+              ></v-switch>
             </v-col>
           </v-row>
         </v-container>
@@ -51,13 +83,13 @@ export default {
   name: "EditItem",
   components: {
     AddDialog,
-    SelectDate
+    SelectDate,
   },
   props: {
     item: { type: Object },
     categories: { type: Array },
     serieses: { type: Array },
-    tags: { type: Array }
+    tags: { type: Array },
   },
   created() {
     this.post = this.setPost();
@@ -70,12 +102,12 @@ export default {
       public_at: null,
       category: "",
       series: "",
-      tags: []
+      tags: [],
     },
     dialog: false,
     categoryEndpoint: "/category/",
     seriesEndpoint: "/series/",
-    tagEndpoint: "/tag/"
+    tagEndpoint: "/tag/",
   }),
   methods: {
     setPost() {
@@ -86,7 +118,7 @@ export default {
         public_at: this.item.public_at,
         category: this.item.category,
         series: this.item.series,
-        tags: this.item.tags
+        tags: this.item.tags,
       };
     },
     notifyMessage() {
@@ -112,10 +144,10 @@ export default {
     editPost() {
       this.$axios
         .$put(`/post/${this.item.id}/`, this.post)
-        .then(res => {
+        .then((res) => {
           this.$emit("editPost");
         })
-        .catch(errorMsg => {
+        .catch((errorMsg) => {
           console.log(errorMsg);
         })
         .finally(() => {
@@ -125,7 +157,7 @@ export default {
     },
     close() {
       this.dialog = false;
-    }
-  }
+    },
+  },
 };
 </script>

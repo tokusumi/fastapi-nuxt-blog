@@ -26,11 +26,18 @@
         </v-card-title>
         <v-card-text>
           <v-text-field v-model="form.userName" label="Username"></v-text-field>
-          <v-text-field v-model="form.contactEmail" label="Email Address"></v-text-field>
+          <v-text-field
+            v-model="form.contactEmail"
+            label="Email Address"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn @click.native="toView">Reset</v-btn>
-          <v-btn color="teal lighten-1" :loading="loading" @click.native="submit">
+          <v-btn
+            color="teal lighten-1"
+            :loading="loading"
+            @click.native="submit"
+          >
             <v-icon left dark>mdi-check</v-icon>Save
           </v-btn>
         </v-card-actions>
@@ -44,7 +51,7 @@ import FileUpload from "~/components/FileUpload.vue";
 export default {
   pageTitle: "Profile",
   components: {
-    FileUpload
+    FileUpload,
   },
   data() {
     return {
@@ -52,10 +59,10 @@ export default {
       form: {
         imgUrl: this.$auth.user.icon,
         userName: this.$auth.user.username,
-        contactEmail: this.$auth.user.email
+        contactEmail: this.$auth.user.email,
       },
       avatarUrl: this.$auth.user.icon,
-      endpoint: "/users/image/"
+      endpoint: "/users/image/",
     };
   },
   methods: {
@@ -65,12 +72,12 @@ export default {
         .$put(`/users/`, {
           icon: this.form.imgUrl,
           username: this.form.userName,
-          email: this.form.contactEmail
+          email: this.form.contactEmail,
         })
-        .then(res => {
+        .then((res) => {
           this.$router.push("/profile/");
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         })
         .finally(() => {
@@ -81,12 +88,12 @@ export default {
       this.form = {
         imgUrl: user.icon,
         userName: user.username,
-        contactEmail: user.email
+        contactEmail: user.email,
       };
     },
     selectAvatar(resCode, target) {
       let reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         this.avatarUrl = e.target.result;
       };
       reader.readAsDataURL(target.files[0]);
@@ -97,7 +104,7 @@ export default {
     },
     toView() {
       this.$router.push("/profile/");
-    }
-  }
+    },
+  },
 };
 </script>
