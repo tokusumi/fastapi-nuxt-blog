@@ -9,6 +9,7 @@
             <v-text-field
               v-model="login.username"
               label="E-mail"
+              ref="username"
             ></v-text-field>
             <v-text-field
               v-model="login.password"
@@ -46,6 +47,9 @@ export default {
         password: "",
       },
     };
+  },
+  mounted() {
+    this.$refs.username.focus();
   },
   methods: {
     userLogin() {
