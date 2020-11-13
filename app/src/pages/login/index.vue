@@ -6,7 +6,10 @@
 
         <v-form>
           <v-container>
-            <v-text-field v-model="login.username" label="E-mail"></v-text-field>
+            <v-text-field
+              v-model="login.username"
+              label="E-mail"
+            ></v-text-field>
             <v-text-field
               v-model="login.password"
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -40,8 +43,8 @@ export default {
       show: false,
       login: {
         username: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
@@ -52,18 +55,18 @@ export default {
       try {
         this.$auth
           .loginWith("local", { data: formData })
-          .then(res => {
+          .then((res) => {
             console.log("success");
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       } catch (err) {
-        err => {
+        (err) => {
           console.log(err);
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>

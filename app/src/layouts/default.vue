@@ -3,7 +3,13 @@
     <v-card color="grey lighten-4" flat height="50px" tile>
       <v-navigation-drawer v-model="leftDrawer" :left="left" temporary fixed>
         <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+          <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+            :to="item.to"
+            router
+            exact
+          >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -14,7 +20,9 @@
         </v-list>
       </v-navigation-drawer>
       <v-app-bar dense fixed>
-        <v-app-bar-nav-icon @click.stop="leftDrawer = !leftDrawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          @click.stop="leftDrawer = !leftDrawer"
+        ></v-app-bar-nav-icon>
 
         <v-toolbar-title>{{ title }}</v-toolbar-title>
 
@@ -58,25 +66,25 @@ export default {
         {
           icon: "mdi-apps",
           title: "Home",
-          to: "/"
+          to: "/",
         },
         {
           icon: "mdi-newspaper-variant",
           title: "List",
-          to: "/list"
+          to: "/list",
         },
         {
           icon: "mdi-pencil",
           title: "Post",
-          to: "/post"
+          to: "/post",
         },
         {
           icon: "mdi-dresser",
           title: "dashboard",
-          to: "/dashboard"
-        }
-      ]
+          to: "/dashboard",
+        },
+      ],
     };
-  }
+  },
 };
 </script>
