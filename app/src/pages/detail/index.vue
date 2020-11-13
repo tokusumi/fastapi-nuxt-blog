@@ -76,7 +76,17 @@
               </v-avatar>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="comment.body"></v-list-item-title>
+              <v-list-item-title
+                v-text="
+                  `${comment.author.username}:  ${comment.created_at.substr(
+                    5,
+                    5
+                  )}`
+                "
+              ></v-list-item-title>
+              <v-list-item-subtitle
+                v-text="comment.body"
+              ></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
