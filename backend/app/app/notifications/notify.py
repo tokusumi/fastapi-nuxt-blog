@@ -27,7 +27,7 @@ def post_mail_notify(post: Post):
     data = {
         'author': post.author.username if post.author.username else post.author.email,
         'title': post.title,
-        'url': urllib.parse.urljoin(HOSTNAME, f'/post/{post.id}/'),
+        'url': urllib.parse.urljoin(HOSTNAME, f'/detail/?id={post.id}'),
         'to_emails': [f.email for f in post.author.friends]
     }
     return _mail_notify(**data)
